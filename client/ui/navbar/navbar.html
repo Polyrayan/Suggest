@@ -2,14 +2,15 @@
     <nav class="navbar navbar-light bg-light">
         <a href="/" class="navbar-brand mr-auto"> Suggest</a>
         <button class="btn btn-outline-secondary mr-auto js-goto-create-project">
-            Creer un projet
+            Créer un projet
         </button>
         {{#unless loggingIn}}
             {{#if currentUser}}
             <span class="navbar-text mr-2">
+                {{currentUser.profile.firstName}}
                 {{currentUser.profile.name}}
             </span>
-                <button class="btn btn-outline-secondary js-logout"> Deconnexion </button>
+                <button class="btn btn-outline-secondary js-logout"> Déconnexion </button>
             {{else}}
                 <button class="btn btn-success js-open-login-modal"> Connexion </button>
             {{/if}}

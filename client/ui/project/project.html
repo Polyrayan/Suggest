@@ -3,26 +3,67 @@
         <div class="card-body">
             <div class="text-center">
                 <h2 class="card-title"> {{project.title}}</h2>
-                <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getUserName project.ownerId}} </h6>
+                <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}} </h6>
                 <a href="/project/{{project._id}}/edit" class="btn btn-primary btn-sm mb-3"> Modifier</a>
             </div>
         </div>
     </div>
+    {{#if fewMembers project.members}}
+        <div class="row text-center">
+            {{#each member in project.members}}
+                <div class="col-lg-{{idealSizeGrid project.members}}">
+                    {{getFullUserName member}}
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        {{#each member in project.members}}
+            <div>
+                {{getFullUserName member}}
+            </div>
+        {{/each}}
+    {{/if}}
 </template>
 
 <template name="project_create_form">
     <div class="card my-2">
-        <h5 class="card-header"> Creer un Projet</h5>
+        <h5 class="card-header"> Créer un Projet</h5>
         <div class="card-body">
             <form class="js-create-project">
                 <input type="text" class="form-control mb-2" placeholder="Titre" name="title">
+                <select name="subject" class="form-control mb-2">
+                    //todo : Faire une table matières
+                    <option value="FAR">FAR</option>
+                    <option value="FASO">Faso</option>
+                    <option value="PISCINE">Piscine</option>
+                    <option value="SIRH">SIRH</option>
+                    <option value="WEB">Web</option>
+                </select>
+                <p class="js-members-project" id="stringMyMembers"> Membre : Vous </p>
+
+                <input class="form-control mr-sm-2 js-searchStudent" type="search" id="searchStudent" placeholder="Rechercher un étudiant..">
+                {{#each student in studentsOfMySection}}
+                    <div class=" col-4">
+                        <ul class="list-group ">
+                            {{> student_single student = student }}
+                        </ul>
+                    </div>
+                {{else}}
+                    <h6 class="text-center text-muted"> Aucun étudiant à ajouter au projet </h6>
+                {{/each}}
                 <div class="my-1 text-right">
                     <button class="btn btn-outline-secondary"> Annuler</button>
-                    <button type="submit" class="btn btn-success"> Creer </button>
+                    <button type="submit" class="btn btn-success"> Créer </button>
                 </div>
             </form>
         </div>
     </div>
+</template>
+
+<template name="student_single">
+            <li class="text-muted list-group-item">
+                <input class="js-checkbox-member" type="checkbox" name="member" value="{{student._id}}" > {{student.profile.firstName }} {{student.profile.name }}
+            </li>
 </template>
 
 <template name="project_edit_form">
@@ -53,10 +94,17 @@
 <template name="project_single">
     <div class="card mb-2">
         <div class="card-body">
-            <h5 class="card-title"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
+            <div class="row">
+                <h5 class="card-title col-md-10"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
+                <h5 class=" col-md-2 card-title text-right"> {{project.subject}} </h5>
+            </div>
             <p class="card-subtitle text-muted">
-                Créé le {{getDisplayDateTime project.createdAt}} par {{getUserName project.ownerId}}
+                Création : {{getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}}
             </p>
+            <p class="card-subtitle text-muted">
+                Membres : {{getMembersOfThisProject project._id}}
+            </p>
+
         </div>
     </div>
 </template>
