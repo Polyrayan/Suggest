@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\both",
+    "\\client",
+    "\\client\\startup",
+    "\\client\\ui",
+    "\\client\\ui\\home",
+    "\\client\\ui\\layout",
+    "\\client\\ui\\navbar",
+    "\\client\\ui\\project",
+    "\\server"
+  ],
+  "SelectedNode": "\\client\\ui\\home\\home.html",
+  "PreviewInSolutionExplorer": false
+}

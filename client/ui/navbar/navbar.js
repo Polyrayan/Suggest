@@ -6,6 +6,9 @@ Template.navbar.events({
     },
     'click .js-logout'(event, instance) {
         Meteor.logout();
+    },
+    'click .js-goto-create-project'(event, instance) {
+        FlowRouter.go('/project/create');
     }
 });
 

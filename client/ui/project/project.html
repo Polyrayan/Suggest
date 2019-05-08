@@ -1,0 +1,62 @@
+<template name="project_page">
+	<div class="my-2">
+        <div class="card-body">
+            <div class="text-center">
+                <h2 class="card-title"> {{project.title}}</h2>
+                <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getUserName project.ownerId}} </h6>
+                <a href="/project/{{project._id}}/edit" class="btn btn-primary btn-sm mb-3"> Modifier</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="project_create_form">
+    <div class="card my-2">
+        <h5 class="card-header"> Creer un Projet</h5>
+        <div class="card-body">
+            <form class="js-create-project">
+                <input type="text" class="form-control mb-2" placeholder="Titre" name="title">
+                <div class="my-1 text-right">
+                    <button class="btn btn-outline-secondary"> Annuler</button>
+                    <button type="submit" class="btn btn-success"> Creer </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template name="project_edit_form">
+    <div class="card my-2">
+        <h5 class="card-header"> Modifier un Projet</h5>
+        <div class="card-body">
+            <form class="js-edit-project">
+                <input type="text" class="form-control mb-2" placeholder="Titre" name="title" value="{{project.title}}">
+                <div class="my-1 text-right">
+                    <button type="button" class="btn btn-danger float-left js-delete-project">Supprimer</button>
+                    <a class="btn-btn-outline-secondary" href="/project/{{project._id}}"></a>
+                    <button type="submit" class="btn btn-success"> Modifier </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template name="project_list">
+	<h3> liste des projets </h3>
+    {{#each project in projects}}
+        {{> project_single  project = project}}
+    {{else}}
+        <h4 class="text-center text-muted"> Aucun projet à afficher </h4>
+    {{/each}}
+</template>
+
+<template name="project_single">
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
+            <p class="card-subtitle text-muted">
+                Créé le {{getDisplayDateTime project.createdAt}} par {{getUserName project.ownerId}}
+            </p>
+        </div>
+    </div>
+</template>
