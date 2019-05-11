@@ -1,0 +1,28 @@
+<template name="task_form">
+    <div class="card-body">
+        <form class="js-create-task">
+            <label> Ajouter une tâche :</label>
+            <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content">
+            <label> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
+Suggest vous conseille donc d'estimer la difficulté en fonction de la durée et les notions qu'il faut maîtriser
+pour réaliser cette tâche comparée aux autres tâches du projet"> [i] </i> </label>
+            <select name="difficulty" class="form-control mb-2">
+                <option value="1">Facile</option>
+                <option value="2">Normale</option>
+                <option value="3">Difficile</option>
+                <option value="4">Très difficile</option>
+            </select>
+            <input type="checkbox"  class="js-checkbox-manual-choice" id="manual">
+            <label for="manual" class="small"> Gérer manuellement l'attribution de la tâche </label>
+            <button type="submit" class="btn btn-success float-right"> Ajouter </button>
+        </form>
+    </div>
+</template>
+
+<template name="task_list">
+
+</template>
+
+<template name="task_single">
+
+</template>

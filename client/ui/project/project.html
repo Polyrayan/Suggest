@@ -1,5 +1,5 @@
 <template name="project_page">
-	<div class="my-2">
+	<div class="card my-2">
         <div class="card-body">
             <div class="text-center">
                 <h2 class="card-title"> {{project.title}}</h2>
@@ -7,6 +7,10 @@
                 <a href="/project/{{project._id}}/edit" class="btn btn-primary btn-sm mb-3"> Modifier</a>
             </div>
         </div>
+    </div>
+    <div class="card mb-5">
+        {{>task_form}}
+        {{>task_list}}
     </div>
     {{#if fewMembers project.members}}
         <div class="row text-center">
@@ -31,13 +35,10 @@
         <div class="card-body">
             <form class="js-create-project">
                 <input type="text" class="form-control mb-2" placeholder="Titre" name="title">
-                <select name="subject" class="form-control mb-2">
-                    //todo : Faire une table matières
-                    <option value="FAR">FAR</option>
-                    <option value="FASO">Faso</option>
-                    <option value="PISCINE">Piscine</option>
-                    <option value="SIRH">SIRH</option>
-                    <option value="WEB">Web</option>
+                <select name="course" class="form-control mb-2">
+                    {{#each course in courses getUserSection}}
+                        <option value="{{course._id}}" >{{course._id}}</option>
+                    {{/each}}
                 </select>
                 <p class="js-members-project" id="stringMyMembers"> Membre : Vous </p>
 
@@ -72,6 +73,25 @@
         <div class="card-body">
             <form class="js-edit-project">
                 <input type="text" class="form-control mb-2" placeholder="Titre" name="title" value="{{project.title}}">
+                <select name="course" id="select_course" class="form-control mb-2">
+                    {{#each course in courses project.section}}
+                        {{#if $eq course._id project.course }}
+                            <option value="{{course._id}}" selected>{{course._id}}</option>
+                        {{else}}
+                            <option value="{{course._id}}" >{{course._id}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+                <p class="card-subtitle text-muted mb-2">
+                    Membres :
+                    {{#each member in project.members}}
+                        {{#if $neq getUserId member project.ownerId}}
+                                <p class="badge badge-light text-muted ">{{getFullUserName member}}  <a href="" class="text-danger js-edit-members" >x</a></p>
+                        {{else}}
+                            <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
+                        {{/if}}
+                    {{/each}}
+                </p>
                 <div class="my-1 text-right">
                     <button type="button" class="btn btn-danger float-left js-delete-project">Supprimer</button>
                     <a class="btn-btn-outline-secondary" href="/project/{{project._id}}"></a>
@@ -83,7 +103,7 @@
 </template>
 
 <template name="project_list">
-	<h3> liste des projets </h3>
+	<h3> Liste des projets </h3>
     {{#each project in projects}}
         {{> project_single  project = project}}
     {{else}}
@@ -96,15 +116,17 @@
         <div class="card-body">
             <div class="row">
                 <h5 class="card-title col-md-10"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
-                <h5 class=" col-md-2 card-title text-right"> {{project.subject}} </h5>
+                <h5 class=" col-md-2 card-title text-right"> {{project.course}} </h5>
             </div>
             <p class="card-subtitle text-muted">
                 Création : {{getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}}
             </p>
             <p class="card-subtitle text-muted">
-                Membres : {{getMembersOfThisProject project._id}}
+                Membres :
+                {{#each member in project.members}}
+                        <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
+                {{/each}}
             </p>
-
         </div>
     </div>
 </template>

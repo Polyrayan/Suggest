@@ -1,0 +1,28 @@
+<template name="course_page">
+    // TODO
+</template>
+
+<template name="course_create_form">
+    // TODO
+</template>
+
+<template name="course_edit_form">
+    // TODO
+</template>
+
+<template name="course_list">
+    <h3> liste des matières </h3>
+    {{#each course in courses}}
+        {{> course_single  course = course}}
+    {{else}}
+        <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
+    {{/each}}
+</template>
+
+<template name="course_select">
+    <select name="course" class="form-control mb-2">
+    {{#each course in courses}}
+        <option value="{{course.name}}"> {{course.name}} </option>
+    {{/each}}
+    </select>
+</template>

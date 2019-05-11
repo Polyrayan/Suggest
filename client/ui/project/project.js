@@ -1,9 +1,9 @@
 import './project.html';
 import {Projects } from "../../../both";
-
+import '../globalHelpers';
 var members = [];
 
-function deleteMemberId(memberId){
+function deleteMemberId(memberId,members){
     for(i = 0 ; i < members.length; i++){
         if(members[i] === memberId){
             members.splice(i,1);
@@ -27,23 +27,21 @@ Template.project_create_form.events({
         event.preventDefault();
         const title = event.target.title.value;
         const section = Meteor.user().profile.section;
-        const ownerId = Meteor.userId();
-        const subject = event.target.subject.value;
-        members.push(ownerId);
-        let projectDoc = {
-            title: title,
-            createdAt: new Date(),
-            section : section,
-            subject : subject,
-            ownerId: ownerId,
-            members: members
-        };
-        Projects.insert(projectDoc);
-        event.target.title.value = '';
-        FlowRouter.go('/');
+        const course = event.target.course.value;
+        members.push(Meteor.userId());
+        Meteor.call('insertProject',{title : title , section : section , course : course , members : members},
+            function (error , result) {
+                if(!error){
+                    event.target.title.value = '';
+                    members = [];
+
+                    FlowRouter.go('/project/:projectId', {projectId : result});
+                }
+            });
     },
-    'keyup  .js-searchStudent'(event , instance){
+    'keyup .js-searchStudent'(event , instance){
         event.preventDefault();
+        console.log(new RegExp('.*' + Session.get("searchStudent") + ' *.'));
         Session.set("searchStudent",document.getElementById("searchStudent").value);
     },
     'click .js-checkbox-member'(event){
@@ -51,7 +49,7 @@ Template.project_create_form.events({
         if(event.target.checked){
             members.push(memberId);
         }else{
-            deleteMemberId(memberId);
+            deleteMemberId(memberId,members);
         }
         var myMembers = "";
         myMembers = addAllMembers(myMembers);
@@ -67,7 +65,7 @@ Template.project_create_form.helpers({
             if (document.getElementById("searchStudent")) {
                 searchStudent = Session.set("searchStudent", document.getElementById("searchStudent").value);
             } else {
-                searchStudent = Session.set("searchStudent", " ");
+                searchStudent = Session.set("searchStudent", "");
             }
             return Meteor.users.find({
                     "profile.section": Meteor.user().profile.section,
@@ -107,7 +105,6 @@ Template.project_page.helpers({
         return Projects.findOne({_id : FlowRouter.getParam('projectId')});
     },
     idealSizeGrid(array){
-        console.log(parseInt(12/array.length));
         return 12/array.length;
     },
     fewMembers(array){
@@ -118,22 +115,36 @@ Template.project_page.helpers({
 Template.project_edit_form.helpers({
     project() {
         return Projects.findOne({_id : FlowRouter.getParam('projectId')});
-    }
+    },
 });
 
 Template.project_edit_form.events({
-    'submit .js-edit-project'(event, instance){
+    'submit .js-edit-project'(event){
         event.preventDefault();
 
         const title = event.target.title.value;
+        const course = event.target.course.value;
 
-        Projects.update({_id : FlowRouter.getParam('projectId')}, { $set: {title: title}});
-
-        FlowRouter.go('/project/:projectId' , {projectId : FlowRouter.getParam('projectId')});
+        Meteor.call('updateProject',{ title : title , course : course, projectId : FlowRouter.getParam('projectId')}
+        ,function (error , result) {
+            if(!error){
+                FlowRouter.go('/project/:projectId' , {projectId : FlowRouter.getParam('projectId')});
+            }
+        });
     },
-    'click .js-delete-project'(event , instance){
-        Projects.remove({_id : FlowRouter.getParam('projectId')});
+    'click .js-delete-project'(){
+        Meteor.call('removeProject', FlowRouter.getParam('projectId'), function (error , result) {
+            if(!error){
+                FlowRouter.go('/');
+            }
+        });
+    },
+    'click .js-edit-members'(event){
+        // A FIXER
+        event.preventDefault();
+        const exMemberId = event.target.exMemberId.value;
+        console.log(exMemberId);
+        // const members = Projects.findOne({_id : FlowRouter.getParam('projectId')});
 
-        FlowRouter.go('/');
     }
 });

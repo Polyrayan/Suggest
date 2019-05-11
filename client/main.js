@@ -1,4 +1,4 @@
-import {Projects , Comments } from '../both';
+import {Projects , Tasks , Courses } from '../both';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import './ui/globalHelpers';
@@ -8,5 +8,6 @@ import './ui/layout/layout';
 if (Meteor.isDevelopment) {
     window.FlowRouter = FlowRouter;
     window.Projects = Projects;
-    window.Comments = Comments;
+    window.Tasks = Tasks;
+    window.Courses = Courses;
 }
