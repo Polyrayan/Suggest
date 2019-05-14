@@ -11,12 +11,26 @@
 </template>
 
 <template name="course_list">
-    <h3> liste des matières </h3>
-    {{#each course in courses}}
-        {{> course_single  course = course}}
-    {{else}}
-        <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
-    {{/each}}
+
+    <h3> Semestre 1 </h3>
+    <div class="row mb-3">
+        {{#each course in courses}}
+                <div class="col-lg-3">
+                    {{> course_single  course = course}}
+                </div>
+        {{else}}
+            <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
+        {{/each}}
+    </div>
+    <h3> Semestre 2 </h3>
+</template>
+
+<template name="course_single">
+    <div class="card text-muted">
+        <div class="card-body">
+            <p> {{course._id}}</p>
+        </div>
+    </div>
 </template>
 
 <template name="course_select">

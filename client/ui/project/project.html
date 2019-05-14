@@ -2,21 +2,24 @@
 	<div class="card my-2">
         <div class="card-body">
             <div class="text-center">
-                <h2 class="card-title"> {{project.title}}</h2>
+                <h2 class="card-title"> {{project.title}} </h2>
                 <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}} </h6>
                 <a href="/project/{{project._id}}/edit" class="btn btn-primary btn-sm mb-3"> Modifier</a>
+                {{>project_progress project = project}}
             </div>
         </div>
     </div>
+
     <div class="card mb-5">
         {{>task_form}}
         {{>task_list}}
     </div>
-    {{#if fewMembers project.members}}
+    {{#if fewMembers project.members.length}}
         <div class="row text-center">
             {{#each member in project.members}}
-                <div class="col-lg-{{idealSizeGrid project.members}}">
+                <div class="col-lg-{{idealSizeGrid project.members.length}}">
                     {{getFullUserName member}}
+                    {{> task_list member = member}}
                 </div>
             {{/each}}
         </div>
@@ -36,7 +39,7 @@
             <form class="js-create-project">
                 <input type="text" class="form-control mb-2" placeholder="Titre" name="title">
                 <select name="course" class="form-control mb-2">
-                    {{#each course in courses getUserSection}}
+                    {{#each course in coursesWithProjects getUserSection}}
                         <option value="{{course._id}}" >{{course._id}}</option>
                     {{/each}}
                 </select>
@@ -74,7 +77,7 @@
             <form class="js-edit-project">
                 <input type="text" class="form-control mb-2" placeholder="Titre" name="title" value="{{project.title}}">
                 <select name="course" id="select_course" class="form-control mb-2">
-                    {{#each course in courses project.section}}
+                    {{#each course in coursesWithProjects project.section}}
                         {{#if $eq course._id project.course }}
                             <option value="{{course._id}}" selected>{{course._id}}</option>
                         {{else}}
@@ -113,20 +116,34 @@
 
 <template name="project_single">
     <div class="card mb-2">
-        <div class="card-body">
+        <div class="card-header">
             <div class="row">
                 <h5 class="card-title col-md-10"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
                 <h5 class=" col-md-2 card-title text-right"> {{project.course}} </h5>
             </div>
+        </div>
+        <div class="card-body">
             <p class="card-subtitle text-muted">
                 Création : {{getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}}
             </p>
             <p class="card-subtitle text-muted">
                 Membres :
                 {{#each member in project.members}}
-                        <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
+                    <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
                 {{/each}}
             </p>
         </div>
+    </div>
+</template>
+
+<template name="project_progress">
+    <p>Tâches effectuées :</p>
+    <h6> {{getNbCompletedTasksOfThisProject project._id}} / {{getNbTasksOfThisProject project._id}}</h6>
+    <div class="progress">
+        {{#if fewPercentage project._id}}
+            <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100">0%</div>
+        {{else}}
+            <div class="progress-bar" role="progressbar" style="width: {{percentage project._id}}%;" aria-valuenow="{{percentage project._id}}" aria-valuemin="0" aria-valuemax="100">{{percentage project._id}}%</div>
+        {{/if}}
     </div>
 </template>

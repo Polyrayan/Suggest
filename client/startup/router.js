@@ -7,6 +7,12 @@ FlowRouter.route('/', {
         BlazeLayout.render('layout', { main: 'home' });
     }
 });
+// project
+FlowRouter.route('/project', {
+    action() {
+        BlazeLayout.render('layout', { main: 'project_list' });
+    }
+});
 
 FlowRouter.route('/project/create', {
     action() {
@@ -23,5 +29,25 @@ FlowRouter.route('/project/:projectId', {
 FlowRouter.route('/project/:projectId/edit', {
     action() {
         BlazeLayout.render('layout', { main: 'project_edit_form' });
+    }
+});
+
+// task
+FlowRouter.route('/project/:projectId/task/:taskId/edit', {
+    action() {
+        BlazeLayout.render('layout', { main: 'task_edit_form' });
+    }
+});
+
+// course
+FlowRouter.route('/cours/:section', {
+    action() {
+        BlazeLayout.render('layout', { main: 'course_list' });
+    }
+});
+// admin
+FlowRouter.route('/admin', {
+    action() {
+        BlazeLayout.render('layout', { main: 'admin_page' });
     }
 });

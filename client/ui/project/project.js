@@ -104,11 +104,11 @@ Template.project_page.helpers({
     project() {
         return Projects.findOne({_id : FlowRouter.getParam('projectId')});
     },
-    idealSizeGrid(array){
-        return 12/array.length;
+    idealSizeGrid(number){
+        return 12/number;
     },
-    fewMembers(array){
-        return array.length < 5 ;
+    fewMembers(number){
+        return number < 5 ;
     }
 });
 
@@ -146,5 +146,14 @@ Template.project_edit_form.events({
         console.log(exMemberId);
         // const members = Projects.findOne({_id : FlowRouter.getParam('projectId')});
 
+    }
+});
+
+Template.project_progress.helpers({
+    percentage(projectId) {
+        return (Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId) / Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) * 100).toFixed(2);
+    },
+    fewPercentage(projectId){
+        return (Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId) / Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) * 100 < 2);
     }
 });

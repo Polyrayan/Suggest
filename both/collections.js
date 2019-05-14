@@ -8,7 +8,7 @@ export const Courses = new Mongo.Collection('courses');
 export const projectUpsertSchema = new SimpleSchema({
     title:      { type: String, max: 25},
     course:     { type: String, max: 10},
-    members:    { type: Array},
+    members:    { type: Array, optional: true},
     'members.$':{ type: String },
     //special update
     section:    { type: String, optional: true, max: 3},
@@ -17,10 +17,12 @@ export const projectUpsertSchema = new SimpleSchema({
 
 export const taskUpsertSchema = new SimpleSchema({
     content:   {  type: String, max: 300},
-    projectId: {  type: String },
-    creatorId: {  type: String },
+    projectId: {  type: String , optional: true},
     workerId:  {  type: String },
     difficulty:{  type: Number },
+    completed: {  type: Boolean},
     //special update
+    creatorId: {  type: String, optional: true},
     taskId:    {  type: String, optional: true}
 },{ check });
+

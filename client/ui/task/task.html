@@ -1,28 +1,119 @@
 <template name="task_form">
     <div class="card-body">
         <form class="js-create-task">
-            <label> Ajouter une tâche :</label>
-            <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content">
-            <label> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
+            <label for="taskName"> Ajouter une tâche :</label>
+            <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName">
+            <label for="difficulty"> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
 Suggest vous conseille donc d'estimer la difficulté en fonction de la durée et les notions qu'il faut maîtriser
-pour réaliser cette tâche comparée aux autres tâches du projet"> [i] </i> </label>
-            <select name="difficulty" class="form-control mb-2">
-                <option value="1">Facile</option>
-                <option value="2">Normale</option>
-                <option value="3">Difficile</option>
-                <option value="4">Très difficile</option>
+pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="fa fa-question-circle text-primary"></i> </i> </label>
+            <select name="difficulty" class="form-control mb-2" id="difficulty">
+                <option  value="1" >Facile</option>
+                <option  value="2" >Normale</option>
+                <option  value="3" >Difficile</option>
+                <option  value="4" >Très difficile</option>
             </select>
-            <input type="checkbox"  class="js-checkbox-manual-choice" id="manual">
+            <input type="checkbox"  class="js-checkbox-manual-form">
             <label for="manual" class="small"> Gérer manuellement l'attribution de la tâche </label>
+            {{>task_manual}}
             <button type="submit" class="btn btn-success float-right"> Ajouter </button>
         </form>
     </div>
 </template>
 
-<template name="task_list">
+<template name="task_manual">
+    {{#if showManualForm}}
+        <div>
+            <label for="manualChoice"> Attribution de la tâche :
+                <select class="form-control mb-2" name="manualChoice" id="manualChoice">
+                    {{#each member in getMembersOfThisProject }}
+                        <option value="{{member}}"> {{ getFullUserName member}} </option>
+                    {{/each}}
+                </select>
+            </label>
+        </div>
+    {{/if}}
+</template>
 
+<template name="task_list">
+    {{#each task in tasks member}}
+        {{>task_single task = task}}
+    {{/each}}
 </template>
 
 <template name="task_single">
+    <div class="card">
+        <div class="row">
+            <div class="offset-1"></div>
+            <div class="col-md-9">
+                <p class="text-muted"> {{task.content}}</p>
+            </div>
+            <div class="col-md-1 btn-group">
+                <a href="/project/{{task.projectId}}/task/{{task._id}}/edit" title="options" class="js-open-edit-form-modal mr-1"> <i class="fa fa-sliders"></i> </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="task_edit_form">
+    <h5 class="text-muted mt-5"> Modification d'une tâche de {{getFullUserName task.workerId}} </h5>
+    <div class="card mt-2">
+        <div class="card-body">
+            <form class="js-edit-task">
+                <label for="taskName"> Nom de la tâche : </label>
+                <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName" value="{{task.content}}">
+                <label for="difficulty_select"> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
+Suggest vous conseille donc d'estimer la difficulté en fonction de la durée et les notions qu'il faut maîtriser
+pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="fa fa-question-circle text-primary"></i> </i> </label>
+                <select name="difficulty" class="form-control mb-2" id="difficulty_select">
+                    {{#if $eq task.difficulty 1}}
+                        <option value="1" selected >Facile</option>
+                    {{else}}
+                        <option  value="1">Facile</option>
+                    {{/if}}
+                    {{#if $eq task.difficulty 2}}
+                        <option  value="2" selected >Normale</option>
+                    {{else}}
+                        <option  value="2">Normale</option>
+                    {{/if}}
+                    {{#if $eq task.difficulty 3}}
+                        <option  value="3" selected >Difficile</option>
+                    {{else}}
+                        <option  value="3">Difficile</option>
+                    {{/if}}
+                    {{#if $eq task.difficulty 4}}
+                        <option  value="4" selected >Très difficile</option>
+                    {{else}}
+                        <option  value="4">Très difficile</option>
+                    {{/if}}
+                </select>
+                <select name="workerId" class="form-control mb-2">
+                    {{#each member in getMembersOfThisProject}}
+                        {{#if $eq task.workerId member}}
+                            <option  value="{{member}}" selected >{{getFullUserName member}}</option>
+                        {{else}}
+                            <option  value="{{member}}">{{getFullUserName member}}</option>
+                        {{/if}}
+                    {{/each}}
+                </select>
+                <div>
+                    <label class="mr-2"> Tâche terminée :</label>
+                    {{#if task.completed}}
+                        <input type="radio" id="CompletedTask" name="completed" value="yes" checked>
+                        <label for="CompletedTask" class="mr-1">Oui</label>
+                        <input type="radio" id="UncompletedTask" name="completed" value="no">
+                        <label for="UncompletedTask">Non</label>
+                    {{else}}
+                        <input type="radio" id="CompletedTask" name="completed" value="yes">
+                        <label for="CompletedTask" class="mr-1">Oui</label>
+                        <input type="radio" id="UncompletedTask" name="completed" value="no" checked>
+                        <label for="UncompletedTask">Non</label>
+                    {{/if}}
+                </div>
+                <a href="./../../" class="btn btn-outline-secondary float-left"> Annuler</a>
+                <button type="button" class="btn btn-danger float-right js-delete-task" id="delete"> Supprimer</button>
+                <button type="submit" class="btn btn-success float-right mr-1 js-edit-task" id="edit"> Modifier </button>
+            </form>
+        </div>
+    </div>
 
 </template>

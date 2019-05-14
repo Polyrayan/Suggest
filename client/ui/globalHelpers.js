@@ -36,10 +36,23 @@ Template.registerHelper('getStringMembersOfThisProject', function(projectId){
 });
 
 Template.registerHelper('getMembersOfThisProject', function(){
-    return  Projects.findOne({_id : FlowRouter.getParam('projectId')}).members;
+    return  Meteor.myGlobalFunctions.getMembersOfThisProject();
 });
 
 // use the @param section to @return all courses of this section
 Template.registerHelper('courses',function (section) {
     return Courses.find({'section': section}).fetch();
+});
+// use the @param section to @return all courses of this section in which students have to do a Projects
+Template.registerHelper('coursesWithProjects',function (section) {
+    return Courses.find({'section': section , 'project' : true}).fetch();
+});
+
+// get tasks which have this @param projectId
+Template.registerHelper('getNbTasksOfThisProject', function (projectId) {
+   return Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId);
+});
+
+Template.registerHelper('getNbCompletedTasksOfThisProject', function (projectId) {
+    return Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId);
 });

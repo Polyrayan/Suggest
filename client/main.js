@@ -2,6 +2,7 @@ import {Projects , Tasks , Courses } from '../both';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import './ui/globalHelpers';
+import './ui/globalFunctions';
 import './startup/router';
 import './ui/layout/layout';
 
