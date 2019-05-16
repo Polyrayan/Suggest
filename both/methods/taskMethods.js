@@ -1,6 +1,6 @@
 import './functionMethods';
 
-import {taskUpsertSchema, Tasks, projectUpsertSchema, Projects} from '../collections';
+import {taskUpsertSchema, Tasks } from '../collections';
 import {check} from 'meteor/check';
 
 Meteor.methods({

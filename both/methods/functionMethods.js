@@ -1,3 +1,5 @@
+import {Projects , Tasks , Courses , Annals , Corrections  } from '../../both';
+
 Meteor.myMethodFunctions = {
     isConnected : function(){
         console.log();
@@ -10,7 +12,15 @@ Meteor.myMethodFunctions = {
         if(!projectFound.ownerId !== Meteor.userId()){
             throw new Meteor.Error('User-not-authorized',"user must be the owner of the project to do this");
         }
-    },isMemberOfThisProject : function(projectId){
+    },
+    isAuthorizedToEditAnnal(annalId){
+      let annalFound = Annals.findOne({_id: annalId});
+      if(!annalFound.creatorId === Meteor.userId() && !Meteor.myGlobalFunctions.isAdmin()){
+          throw new Meteor.Error('User-not-authorized',"user must be an admin or at least the owner of the annal");
+      }
+
+    },
+    isMemberOfThisProject : function(projectId){
         let projectFound = Projects.findOne({_id: projectId});
         let members = projectFound && projectFound.members;
         let userId = Meteor.userId();

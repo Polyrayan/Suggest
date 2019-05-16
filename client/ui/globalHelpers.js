@@ -11,6 +11,10 @@ Template.registerHelper('getFullUserName', function(userId){
    }
 });
 
+Template.registerHelper('getFullAnnalName', function(annal){
+    return annal.type +' '+ annal.course +' '+annal.year;
+});
+
 Template.registerHelper('getUserSection', function(){
     let user = Meteor.users.findOne({_id : Meteor.userId()});
     if( user && user.profile){
@@ -39,6 +43,10 @@ Template.registerHelper('getMembersOfThisProject', function(){
     return  Meteor.myGlobalFunctions.getMembersOfThisProject();
 });
 
+Template.registerHelper('getAnnalsOfThisCourse', function(){
+    return  Meteor.myGlobalFunctions.getAnnalsOfThisCourse();
+});
+
 // use the @param section to @return all courses of this section
 Template.registerHelper('courses',function (section) {
     return Courses.find({'section': section}).fetch();
@@ -55,4 +63,16 @@ Template.registerHelper('getNbTasksOfThisProject', function (projectId) {
 
 Template.registerHelper('getNbCompletedTasksOfThisProject', function (projectId) {
     return Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId);
+});
+
+Template.registerHelper('splitLink', function (link) {
+    return link.replace("view", "preview")
+});
+
+Template.registerHelper('getAnnal',function () {
+    return Annals.findOne({_id : FlowRouter.getParam('annalId')});
+});
+
+Template.registerHelper('isAuthorizedToEditThisAnnal', function(annal){
+        return !!(Meteor.userId() === annal.creatorId || Meteor.myGlobalFunctions.isAdmin());
 });

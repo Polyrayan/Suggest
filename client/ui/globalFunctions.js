@@ -1,10 +1,10 @@
-import {Projects, Tasks} from "../../both";
+import {Projects, Tasks , Annals , Courses , Corrections} from "../../both";
 
 Meteor.myGlobalFunctions = {
     // User
     isAdmin : function () {
         const user = Meteor.users.findOne({_id : Meteor.userId()});
-        return user.profile.admin;
+        return !!(user && user.profile && user.profile.admin);
     },
     isConnected : function () {
       return !!Meteor.userId();
@@ -23,6 +23,9 @@ Meteor.myGlobalFunctions = {
     getMembersOfThisProject : function(){
         let project = Projects.findOne({_id : FlowRouter.getParam('projectId')});
         return project && project.members;
+    },
+    getAnnalsOfThisCourse : function(){
+        return  Annals.find({course : FlowRouter.getParam('courseId')}).fetch();
     },
     getNbTasksOfThisProject : function(projectId){
         return Tasks.find({projectId : projectId }).fetch().length;

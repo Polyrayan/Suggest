@@ -1,5 +1,5 @@
 {
-  "name": "suggest",
+  "name": "rires",
   "private": true,
   "scripts": {
     "start": "meteor run",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
-    "bcrypt": "^3.0.2",
+    "bcrypt": "^3.0.6",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
     "simpl-schema": "^1.5.5"

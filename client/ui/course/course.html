@@ -1,5 +1,16 @@
 <template name="course_page">
-    // TODO
+    <div class="text-muted card-header mt-2">
+        <div class="row">
+            <div class="col-6">
+                <h5> Les annales répertoriées : </h5>
+            </div>
+            <div class="col-lg-6">
+                <h5 class="text-right"> {{nbAnnals}} annales </h5>
+                <a class="float-right btn btn-success js-goto-create-annal text-white"> Ajouter un sujet </a>
+            </div>
+        </div>
+    </div>
+    {{>annal_list}}
 </template>
 
 <template name="course_create_form">
@@ -14,8 +25,8 @@
 
     <h3> Semestre 1 </h3>
     <div class="row mb-3">
-        {{#each course in courses}}
-                <div class="col-lg-3">
+        {{#each course in coursesS1}}
+                <div class="col-lg-3 mb-3">
                     {{> course_single  course = course}}
                 </div>
         {{else}}
@@ -23,12 +34,27 @@
         {{/each}}
     </div>
     <h3> Semestre 2 </h3>
+    <div class="row mb-3">
+        {{#each course in coursesS2}}
+            <div class="col-lg-3 mb-3">
+                {{> course_single  course = course}}
+            </div>
+        {{else}}
+            <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
+        {{/each}}
+    </div>
 </template>
 
 <template name="course_single">
     <div class="card text-muted">
-        <div class="card-body">
+        <div class="card-body mb-2">
             <p> {{course._id}}</p>
+            {{#if course.project}}
+                <a href=""> <i class="fa fa-briefcase mr-2"></i> </a>
+            {{/if}}
+            {{#if containsAnnals course._id}}
+                <a href="{{course.section}}/{{course._id}}/annal"> <i class="fa fa-file-pdf-o mr-2"></i> </a>
+            {{/if}}
         </div>
     </div>
 </template>

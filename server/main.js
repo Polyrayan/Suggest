@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 import '../both';
 
-//to deny update of users because we could still edit it even if the package insecure has been deleted
+//To forbid users from making any modifications to their user document:
 Meteor.users.deny({
     update(){ return true;}
 });

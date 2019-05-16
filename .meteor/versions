@@ -1,4 +1,4 @@
-accounts-base@1.4.3
+accounts-base@1.4.4
 accounts-password@1.5.1
 alexwine:bootstrap-4@4.1.0
 allow-deny@1.1.0
@@ -66,7 +66,7 @@ npm-bcrypt@0.9.3
 npm-mongo@3.1.2
 observe-sequence@1.0.16
 ordered-dict@1.1.0
-ostrio:flow-router-extra@3.6.2
+ostrio:flow-router-extra@3.6.3
 peppelg:bootstrap-3-modal@1.0.4
 promise@0.11.2
 raix:handlebar-helpers@0.2.5
