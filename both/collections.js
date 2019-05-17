@@ -38,3 +38,31 @@ export const annalUpsertSchema = new SimpleSchema({
     annalId:    {  type: String, optional: true}
 },{ check });
 
+export const correctionInsertSchema = new SimpleSchema({
+    link :                {  type: String },
+    reliability:          {  type: String },
+    like:                 {  type: Object },
+    'like.membersId':     {  type: Array  },
+    'like.membersId.$':   {  type: String },
+    dislike:              {  type: Object },
+    'dislike.membersId':  {  type: Array  },
+    'dislike.membersId.$':{  type: String },
+    creatorId:            {  type: String },
+    annalId :             {  type: String },
+},{ check });
+
+export const correctionUpdateSchema = new SimpleSchema({
+    link :         {  type: String },
+    reliability:   {  type: String },
+    correctionId : {  type: String },
+},{ check });
+
+export const correctionUpdateLikeDislikeSchema = new SimpleSchema({
+    like:                {  type: Object , optional : true},
+    'like.membersId':     {  type: Array  },
+    'like.membersId.$':   {  type: String },
+    dislike:             {  type: Object , optional : true},
+    'dislike.membersId':  {  type: Array  },
+    'dislike.membersId.$':{  type: String },
+    correctionId:        {  type: String }
+}, {check });

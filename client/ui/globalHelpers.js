@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {Courses} from "../../both";
+
 Template.registerHelper('getDisplayDateTime', function (date) {
     return   moment(date).format('DD/MM/YYYY à HH:mm');
 });
@@ -11,8 +11,12 @@ Template.registerHelper('getFullUserName', function(userId){
    }
 });
 
-Template.registerHelper('getFullAnnalName', function(annal){
-    return annal.type +' '+ annal.course +' '+annal.year;
+Template.registerHelper('getFullAnnalName', function(annalId){
+    let annalFound = Annals.findOne({_id : annalId});
+    const type = annalFound && annalFound.type;
+    const course = annalFound && annalFound.course;
+    const year = annalFound && annalFound.year;
+    return type+' '+course+' '+year;
 });
 
 Template.registerHelper('getUserSection', function(){
@@ -74,5 +78,24 @@ Template.registerHelper('getAnnal',function () {
 });
 
 Template.registerHelper('isAuthorizedToEditThisAnnal', function(annal){
-        return !!(Meteor.userId() === annal.creatorId || Meteor.myGlobalFunctions.isAdmin());
+    return Meteor.myGlobalFunctions.isAuthorizedToEditAnnal(annal._id);
+});
+
+Template.registerHelper('getCorrection',function () {
+    return Meteor.myGlobalFunctions.getCorrection();
+});
+
+Template.registerHelper('isAuthorizedToEditThisCorrection', function(){
+    return Meteor.myGlobalFunctions.isAuthorizedToEditCorrection();
+});
+
+Template.registerHelper('getCorrectionsOfThisAnnal', function () {
+    return Meteor.myGlobalFunctions.getCorrectionsOfThisAnnal();
+});
+
+Template.registerHelper('getNbLike', function (correctionId) {
+    return Meteor.myGlobalFunctions.getNbLike(correctionId);
+});
+Template.registerHelper('getNbDislike', function (correctionId) {
+    return Meteor.myGlobalFunctions.getNbDislike(correctionId);
 });

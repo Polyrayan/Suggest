@@ -46,15 +46,14 @@
 </template>
 
 <template name="course_single">
-    <div class="card text-muted">
+    <div class="card">
         <div class="card-body mb-2">
-            <p> {{course._id}}</p>
+            <a href="{{course.section}}/{{course._id}}/annals"><h5> {{course._id}} </h5></a>
             {{#if course.project}}
-                <a href=""> <i class="fa fa-briefcase mr-2"></i> </a>
+                <a href="courses/projects/{{course._id}}/annals" class="js-goto-project-course" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
             {{/if}}
-            {{#if containsAnnals course._id}}
-                <a href="{{course.section}}/{{course._id}}/annal"> <i class="fa fa-file-pdf-o mr-2"></i> </a>
-            {{/if}}
+            <a href="{{course.section}}/{{course._id}}/annals" title="sujets"> {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
+            <a href="" title="correction">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
         </div>
     </div>
 </template>

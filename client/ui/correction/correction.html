@@ -1,14 +1,46 @@
 <template name="correction_page">
-    // TODO
+    <div class="card my-2">
+        <div class="card-body">
+            <div class="text-center">
+                <h2 class="card-title"> Correction {{ getFullAnnalName getAnnal._id}} </h2>
+                {{#if isAuthorizedToEditThisCorrection}}
+                    <div class="text-center">
+                        <a class="btn btn-primary mb-3 js-goto-edit-correction text-white"> Modifier</a>
+                    </div>
+                {{/if}}
+                <div>
+                    <a class="float-left btn btn-dark text-white js-goto-annal-page"> <i class="fa fa-chevron-left"></i> retour au sujet </a>
+
+                    <a> Que pensez-vous de cette correction :  </a>
+                    <a href="" class="js-like-correction mr-2"><i class="fa fa-thumbs-up text-primary"></i> {{getNbLike getCorrection._id}}</a>
+                    <a href="" class="js-dislike-correction "> <i class="fa fa-thumbs-down text-primary"></i> {{getNbDislike getCorrection._id}} </a>
+
+                    <a class="float-right btn btn-dark text-white js-goto-create-correction"> Ajouter une autre correction <i class="fa fa-chevron-right"></i> </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body text-center">
+            <iframe src="{{splitLink getCorrection.link}}" height="700" width="900" class=""></iframe>
+        </div>
+    </div>
 </template>
 
 <template name="correction_create_form">
     <div class="card my-2">
-        <h5 class="card-header"> Proposer une correction du sujet {{getFullAnnalName annal}}</h5>
+        <h5 class="card-header"> Proposer une correction du sujet {{getFullAnnalName getAnnal._id}}</h5>
         <div class="card-body">
             <form class="js-create-correction">
                 <label for="linkInput"> Drive :
-                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput">
+                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput" required>
+                </label>
+                <label for="select_reliability"> Fiabilité de la correction :
+                    <select name="reliability" class="form-control mb-2" required id="select_reliability">
+                        <option value="" >Fiabilité de la correction</option>
+                        <option value="25%" > 25%</option>
+                        <option value="50%" > 50%</option>
+                        <option value="75%" > 75%</option>
+                        <option value="100%" > 100% (Approuvé par un professeur)</option>
+                    </select>
                 </label>
                 <div class="my-1 text-right">
                     <button class="btn btn-outline-secondary"> Annuler</button>
@@ -20,11 +52,37 @@
 </template>
 
 <template name="correction_edit_form">
-    // TODO
+    <div class="card my-2">
+        <h5 class="card-header"> Modifier la Correction de {{getFullAnnalName getAnnal._id}}</h5>
+        <div class="card-body">
+            {{#if isAuthorizedToEditThisCorrection}}
+                <form class="js-edit-correction">
+                    <label for="linkInput"> Drive :
+                        <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput"  value="{{getCorrection.link}}" required>
+                    </label>
+                    <label for="select_reliability"> Fiabilité de la correction :
+                        <select name="reliability" class="form-control mb-2" required id="select_reliability">
+                            <option value="" >Fiabilité de la correction</option>
+                            {{#if $eq getCorrection.reliability "25%"}} <option value="25%" selected> 25%</option> {{else}} <option value="25%" > 25%</option>{{/if}}
+                            {{#if $eq getCorrection.reliability "50%"}} <option value="50%" selected> 50%</option> {{else}} <option value="50%" > 50%</option>{{/if}}
+                            {{#if $eq getCorrection.reliability "75%"}} <option value="75%" selected> 75%</option> {{else}} <option value="75%" > 75%</option>{{/if}}
+                            {{#if $eq getCorrection.reliability "100%"}} <option value="100%" selected> 100%</option> {{else}} <option value="100%" > 100% (Approuvé par un professeur)</option>{{/if}}
+                        </select>
+                    </label>
+                    <div class="my-1 text-right">
+                        <button type="button" class="btn btn-danger float-left js-delete-correction">Supprimer</button>
+                        <button type="submit" class="btn btn-success"> Modifier </button>
+                    </div>
+                </form>
+            {{else}}
+                <h5 class="text-center text-danger"> vous n'etes pas autorisé à modifier cette correction </h5>
+            {{/if}}
+        </div>
+    </div>
 </template>
 
 <template name="correction_list">
-    // TODO
+
 </template>
 
 <template name="correction_single">

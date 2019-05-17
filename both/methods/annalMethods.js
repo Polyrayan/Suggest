@@ -19,6 +19,7 @@ Meteor.methods({
     },
     updateAnnal(annal){
         annalUpsertSchema.validate(annal);
+        console.log(annal);
         Meteor.myMethodFunctions.isConnected();
         Meteor.myMethodFunctions.isAuthorizedToEditAnnal(annal.annalId);
         Annals.update({_id : annal.annalId},

@@ -9,15 +9,15 @@ Template.navbar.events({
     },
     'click .js-goto-create-project'() {
         if (Meteor.myGlobalFunctions.isConnected()){
-            FlowRouter.go('/project/create');
+            FlowRouter.go('/projects/create');
         }else{
-            Session.set('redirection', '/project/create');
+            Session.set('redirection', '/projects/create');
             Modal.show('login_modal');
         }
     },
     'click .js-goto-my-courses'() {
         if (Meteor.myGlobalFunctions.isConnected()){
-            FlowRouter.go('/cours/'+Meteor.myGlobalFunctions.getUser().profile.section);
+            FlowRouter.go('/courses/'+Meteor.myGlobalFunctions.getUser().profile.section);
         }else{
             Modal.show('login_modal');
         }

@@ -4,11 +4,7 @@ import '../globalHelpers';
 var members = [];
 
 function deleteMemberId(memberId,members){
-    for(i = 0 ; i < members.length; i++){
-        if(members[i] === memberId){
-            members.splice(i,1);
-        }
-    }
+    Meteor.myGlobalFunctions.deleteElementFromArray(memberId,members)
 }
 
 function addAllMembers(myMembers){
@@ -35,7 +31,7 @@ Template.project_create_form.events({
                     event.target.title.value = '';
                     members = [];
 
-                    FlowRouter.go('/project/:projectId', {projectId : result});
+                    FlowRouter.go('/projects/:projectId', {projectId : result});
                 }
             });
     },
@@ -128,7 +124,7 @@ Template.project_edit_form.events({
         Meteor.call('updateProject',{ title : title , course : course, projectId : FlowRouter.getParam('projectId')}
         ,function (error , result) {
             if(!error){
-                FlowRouter.go('/project/:projectId' , {projectId : FlowRouter.getParam('projectId')});
+                FlowRouter.go('/projects/:projectId' , {projectId : FlowRouter.getParam('projectId')});
             }
         });
     },

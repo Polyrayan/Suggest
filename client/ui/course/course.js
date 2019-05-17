@@ -1,5 +1,5 @@
 import './course.html';
-import {Courses} from "../../../both";
+import {Annals, Courses} from "../../../both";
 
 
 Template.course_list.helpers({
@@ -17,6 +17,20 @@ Template.course_list.helpers({
 Template.course_single.helpers({
     containsAnnals(courseId){
         return !!Annals.findOne({course: courseId});
+    },
+    nbAnnal(courseId){
+        return Annals.find({course : courseId}).fetch().length
+    },
+    nbProject(courseId){
+        return Projects.find({course : courseId}).fetch().length
+    },
+    nbCorrections(courseId){
+          let sum = 0;
+          const annals = Annals.find({course : courseId}).fetch();
+          for (i = 0; i < annals.length ; i++){
+              sum += Corrections.find({annalId : annals[i]._id }).fetch().length;
+          }
+          return sum
     }
 });
 
@@ -28,6 +42,12 @@ Template.course_page.helpers({
 
 Template.course_page.events({
     'click .js-goto-create-annal'(){
-        FlowRouter.go("/cours/:section/:courseId/annal/create", {section : FlowRouter.getParam('section'), courseId : FlowRouter.getParam('courseId')});
-    }
+        const route = '/courses/' + FlowRouter.getParam('section') + '/' + FlowRouter.getParam('courseId') + '/annals/create';
+        if (Meteor.myGlobalFunctions.isConnected()) {
+            FlowRouter.go(route);
+        }
+        else {
+            Session.set('redirection', route);
+            Modal.show('login_modal');
+        }    }
 });

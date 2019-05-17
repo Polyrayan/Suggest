@@ -2,19 +2,31 @@
     <div class="card my-2">
         <div class="card-body">
             <div class="text-center">
-                <h2 class="card-title"> {{ getFullAnnalName getAnnal}} </h2>
+                <h2 class="card-title"> {{ getFullAnnalName getAnnal._id}} </h2>
                 {{#if isAuthorizedToEditThisAnnal getAnnal}}
                     <div class="text-center">
                         <a href="{{ getAnnal._id}}/edit" class="btn btn-primary mb-3"> Modifier</a>
                     </div>
                 {{/if}}
                 <div class="tex-center">
-                    <a href="{{ getAnnal._id}}/correction/create" class="btn btn-dark"> Ajouter une correction </a>
+                    <a class="btn btn-dark text-white js-goto-create-correction"> Ajouter une correction </a>
                 </div>
             </div>
         </div>
-        <div class="card-body text-center">
-            <iframe src="{{splitLink getAnnal.link}}" class="col-12"></iframe>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <iframe src="{{splitLink getAnnal.link}}" height="700" width="600" class=""></iframe>
+                </div>
+                <div class="col-4">
+                    {{#each correction in getCorrectionsOfThisAnnal}}
+                        <div class="mb-3">
+                            <a href="{{getAnnal._id}}/corrections/{{correction._id}}"> correction de {{ getFullUserName correction.creatorId}}</a>
+                            <a><i class="fa fa-thumbs-up text-primary"></i> {{getNbLike correction._id}} <i class="fa fa-thumbs-down text-primary"></i> {{getNbDislike correction._id}} </a>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -25,16 +37,16 @@
         <div class="card-body">
             <form class="js-create-annal text-muted">
                 <label for="selectType"> Type :
-                    <select class="form-control mb-2 mr-2" name="type" id="selectType">
+                    <select class="form-control mb-2 mr-2" name="type" id="selectType" required>
                         <option value="Examen">Examen </option>
                         <option value="CC"> CC </option>
                     </select>
                 </label>
                 <label for="yearInput"> Année :
-                    <input type="number" class="form-control mb-2" placeholder="Année du sujet" name="year" id="yearInput">
+                    <input type="number" class="form-control mb-2" placeholder="Année du sujet" name="year" id="yearInput" required>
                 </label>
                 <label for="linkInput"> Drive :
-                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput">
+                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput" required>
                 </label>
                 <div class="my-1">
                     <button class="btn btn-outline-secondary float-left"> Annuler</button>
@@ -47,34 +59,38 @@
 
 <template name="annal_edit_form">
     <div class="card my-2">
-        <h5 class="card-header"> Modifier un Sujet</h5>
+        <h5 class="card-header"> Modifier le Sujet {{getFullAnnalName getAnnal._id}}</h5>
         <div class="card-body">
-            <form class="js-edit-annal">
-                <label for="selectType"> Type :
-                    <select class="form-control mb-2" name="type" id="selectType">
-                        {{#if $eq getAnnal.type "Examen"}}
-                            <option value="Examen" selected>Examen </option>
-                        {{else}}
-                            <option value="Examen">Examen </option>
-                        {{/if}}
-                        {{#if $eq getAnnal.type "CC"}}
-                            <option value="CC" selected> CC </option>
-                        {{else}}
-                            <option value="CC"> CC </option>
-                        {{/if}}
-                    </select>
-                </label>
-                <label for="yearInput"> Année :
-                    <input type="number" class="form-control mb-2" placeholder="Année du sujet" name="year" value="{{getAnnal.year}}" id="yearInput">
-                </label>
-                <label for="linkInput"> Drive :
-                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" value="{{getAnnal.link}}" id="linkInput">
-                </label>
-                <div class="my-1 text-right">
-                    <button type="button" class="btn btn-danger float-left js-delete-annal">Supprimer</button>
-                    <button type="submit" class="btn btn-success"> Modifier </button>
-                </div>
-            </form>
+            {{#if isAuthorizedToEditThisAnnal getAnnal}}
+                <form class="js-edit-annal">
+                    <label for="selectType"> Type :
+                        <select class="form-control mb-2" name="type" id="selectType" required>
+                            {{#if $eq getAnnal.type "Examen"}}
+                                <option value="Examen" selected>Examen </option>
+                            {{else}}
+                                <option value="Examen">Examen </option>
+                            {{/if}}
+                            {{#if $eq getAnnal.type "CC"}}
+                                <option value="CC" selected> CC </option>
+                            {{else}}
+                                <option value="CC"> CC </option>
+                            {{/if}}
+                        </select>
+                    </label>
+                    <label for="yearInput"> Année :
+                        <input type="number" class="form-control mb-2" placeholder="Année du sujet" name="year" value="{{getAnnal.year}}" id="yearInput" required>
+                    </label>
+                    <label for="linkInput"> Drive :
+                        <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" value="{{getAnnal.link}}" id="linkInput" required>
+                    </label>
+                    <div class="my-1 text-right">
+                        <button type="button" class="btn btn-danger float-left js-delete-annal">Supprimer</button>
+                        <button type="submit" class="btn btn-success"> Modifier </button>
+                    </div>
+                </form>
+            {{else}}
+                <h5 class="text-center text-danger"> vous n'etes pas autorisé à modifier ce sujet </h5>
+            {{/if}}
         </div>
     </div>
 </template>
@@ -93,16 +109,16 @@
         <div class="card-header ">
             <div class="row">
                 <div class="col-6">
-                    <a href="annal/{{annal._id}}"><h6> {{getFullAnnalName annal}}</h6></a>
+                    <a href="annals/{{annal._id}}"><h6> {{getFullAnnalName annal._id}}</h6></a>
                 </div>
                 <div class="col-6">
                     <h6 class="text-right "> Ajouter par {{getFullUserName annal.creatorId}}</h6>
                 </div>
             </div>
                 <div class="text-right text-white">
-                    <a href="annal/{{ annal._id}}/correction/create" class="btn btn-dark"> Ajouter une correction </a>
+                    <a class="btn btn-dark js-goto-create-correction"> Ajouter une correction </a>
                     {{#if isAuthorizedToEditThisAnnal annal}}
-                        <a href="annal/{{ annal._id}}/edit" class="btn  btn-warning js-go-to-edit-annal"> Modifier </a>
+                        <a href="annals/{{ annal._id}}/edit" class="btn  btn-warning js-go-to-edit-annal"> Modifier </a>
                     {{/if}}
                 </div>
         </div>

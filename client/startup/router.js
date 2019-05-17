@@ -10,39 +10,39 @@ FlowRouter.route('/', {
 
 // project
 //list of project
-FlowRouter.route('/project', {
+FlowRouter.route('/projects', {
     action() {
         BlazeLayout.render('layout', { main: 'project_list' });
     }
 });
 // form to crate a project
-FlowRouter.route('/project/create', {
+FlowRouter.route('/projects/create', {
     action() {
         BlazeLayout.render('layout', { main: 'project_create_form' });
     }
 });
 //page of the project
-FlowRouter.route('/project/:projectId', {
+FlowRouter.route('/projects/:projectId', {
     action() {
         BlazeLayout.render('layout', { main: 'project_page' });
     }
 });
 // form to edit a project
-FlowRouter.route('/project/:projectId/edit', {
+FlowRouter.route('/projects/:projectId/edit', {
     action() {
         BlazeLayout.render('layout', { main: 'project_edit_form' });
     }
 });
 
 // task
-FlowRouter.route('/project/:projectId/task/:taskId/edit', {
+FlowRouter.route('/projects/:projectId/tasks/:taskId/edit', {
     action() {
         BlazeLayout.render('layout', { main: 'task_edit_form' });
     }
 });
 
 // course
-FlowRouter.route('/cours/:section', {
+FlowRouter.route('/courses/:section', {
     action() {
         BlazeLayout.render('layout', { main: 'course_list' });
     }
@@ -50,25 +50,25 @@ FlowRouter.route('/cours/:section', {
 
 // annal
 //an annal list of a course
-FlowRouter.route('/cours/:section/:courseId/annal', {
+FlowRouter.route('/courses/:section/:courseId/annals', {
     action() {
         BlazeLayout.render('layout', { main: 'course_page' });
     }
 });
 //form to create an annal
-FlowRouter.route('/cours/:section/:courseId/annal/create', {
+FlowRouter.route('/courses/:section/:courseId/annals/create', {
     action() {
         BlazeLayout.render('layout', { main: 'annal_create_form' });
     }
 });
 //page of an annal
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId', {
     action() {
         BlazeLayout.render('layout', { main: 'annal_page' });
     }
 });
 //form to edit an annal
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId/edit', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId/edit', {
     action() {
         BlazeLayout.render('layout', { main: 'annal_edit_form' });
     }
@@ -76,25 +76,25 @@ FlowRouter.route('/cours/:section/:courseId/annal/:annalId/edit', {
 
 //correction
 //list of corrections of an annal
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId', {
     action() {
         BlazeLayout.render('layout', { main: 'annal_page' });
     }
 });
 //form to create correction
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId/correction/create', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId/corrections/create', {
     action() {
         BlazeLayout.render('layout', { main: 'correction_create_form' });
     }
 });
 //page of one correction
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId/correction/:correctionId', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId/corrections/:correctionId', {
     action() {
         BlazeLayout.render('layout', { main: 'correction_page' });
     }
 });
 //form to edit a correction
-FlowRouter.route('/cours/:section/:courseId/annal/:annalId/correction/:correctionId/edit', {
+FlowRouter.route('/courses/:section/:courseId/annals/:annalId/corrections/:correctionId/edit', {
     action() {
         BlazeLayout.render('layout', { main: 'correction_edit_form' });
     }
