@@ -1,6 +1,4 @@
 import './admin.html';
-import {Projects , Tasks , Courses , Annals , Corrections  } from '../both';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.admin_course_list.onCreated(function () {
     this.subscribe('admin.course.list', FlowRouter.getParam('section'));
