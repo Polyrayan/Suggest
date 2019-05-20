@@ -1,6 +1,7 @@
 import './project.html';
 import {Projects } from "../../../both";
 import '../globalHelpers';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 var members = [];
 
 function deleteMemberId(memberId,members){

@@ -1,4 +1,5 @@
 import './correction.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.correction_list.helpers({
     corrections(){

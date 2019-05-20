@@ -1,4 +1,5 @@
 import './annal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.annal_list.onCreated(function () {
     this.subscribe('annals.list', FlowRouter.getParam('courseId'));

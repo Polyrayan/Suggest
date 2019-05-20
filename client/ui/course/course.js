@@ -1,4 +1,5 @@
 import './course.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import {Annals, Courses} from "../../../both";
 
 Template.course_list.onCreated(function () {

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import {Annals, Courses} from "../../both";
 
 Template.registerHelper('getDisplayDateTime', function (date) {
