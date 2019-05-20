@@ -1,18 +1,28 @@
 <template name="home">
     <div class="container text-center my-2">
-        <h5> Mes projets : </h5>
         {{#if Template.subscriptionsReady}}
-        <div class="row">
-            {{#each project in projects}}
-                <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <a href="projects/{{project._id}}">{{project.title}}</a>
+            {{#if currentUser}}
+                <h3> Mes projets : </h3>
+                <div class="row">
+                    {{#each project in projects}}
+                        <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="projects/{{project._id}}">{{project.title}}</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    {{/each}}
                 </div>
-            {{/each}}
-        </div>
+            {{else}}
+                <div class="text-muted text-center">
+                    <h1 class="my-5"> Bienvenue sur Suggest</h1>
+                    <h5 class="my-5"> Connectez-vous pour accéder à :</h5>
+                    <p> {{sumUp "IG3"}}</p>
+                    <p> {{sumUp "IG4"}}</p>
+                    <p> {{sumUp "IG5"}}</p>
+                </div>
+            {{/if}}
         {{else}}
             {{> spinner}}
         {{/if}}

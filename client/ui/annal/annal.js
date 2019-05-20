@@ -66,6 +66,9 @@ Template.annal_edit_form.events({
                 });
             }
         });
+    },
+    'click .js-goto-annal-page'(){
+        return Meteor.myGlobalFunctions.gotoAnnalPage();
     }
 });
 
@@ -80,8 +83,8 @@ Template.annal_page.events({
 });
 
 Template.annal_single.events({
-    'click .js-goto-create-correction'() {
-        const route = '/courses/' + FlowRouter.getParam('section') + '/' + FlowRouter.getParam('courseId') + '/annals/' + FlowRouter.getParam('annalId') + '/corrections/create';
+    'click .js-goto-create-correction'(event) {
+        const route = '/courses/' + FlowRouter.getParam('section') + '/' + FlowRouter.getParam('courseId') + '/annals/' + $(event.currentTarget).val() + '/corrections/create';
         if (Meteor.myGlobalFunctions.isConnected()){
             FlowRouter.go(route);
         }
@@ -91,4 +94,3 @@ Template.annal_single.events({
         }
     }
 });
-

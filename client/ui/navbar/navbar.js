@@ -12,6 +12,7 @@ Template.navbar.events({
     },
     'click .js-logout'() {
         Meteor.logout();
+        FlowRouter.go('/');
     },
     'click .js-goto-create-project'() {
         if (Meteor.myGlobalFunctions.isConnected()){

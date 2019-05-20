@@ -38,6 +38,8 @@ Template.correction_create_form.events({
                     Meteor.myGlobalFunctions.gotoAnnalPage();
                 }
             });
+    },'click .js-goto-annal-page'(){
+        Meteor.myGlobalFunctions.gotoAnnalPage();
     }
 });
 

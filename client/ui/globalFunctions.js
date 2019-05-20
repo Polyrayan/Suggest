@@ -4,7 +4,8 @@ import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 Meteor.myGlobalFunctions = {
     // User
     isAdmin : function () {
-        return (Meteor.user().profile.admin === true);
+        const admin = Meteor.user() && Meteor.user().profile && Meteor.user().profile.admin === true;
+        return admin === true;
     },
     isConnected : function () {
       return !!Meteor.userId();
@@ -205,5 +206,17 @@ Meteor.myGlobalFunctions = {
     },
     redirect(){
         return FlowRouter.go('/');
+    },
+    sumUp(section) {
+
+        const nbProjects = Projects.find({section: section}).fetch();
+        const nbCourses = Courses.find({section: section}).fetch();
+        const arrayCourseId = nbCourses.map(course => course._id);
+        const nbAnnals = Annals.find({course: {$in: arrayCourseId}}).fetch();
+        const arrayAnnalId = nbAnnals.map(annals => annals._id);
+        const nbCorrections = Annals.find({course: {$in: arrayAnnalId}}).fetch();
+
+        return nbAnnals.length + ' sujets ' + nbCorrections.length + ' corrections et ' + nbProjects.length + ' projets en '+section;
+
     }
 };

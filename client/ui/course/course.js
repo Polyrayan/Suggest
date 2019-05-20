@@ -88,6 +88,13 @@ Template.course_edit_form.events({
                 }
             });
     },
+    'click .js-goto-admin-section'(){
+        if(Meteor.myGlobalFunctions.isAdmin()){
+            FlowRouter.go('/admin/sections/:section/courses',{section : FlowRouter.getParam('section')});
+        }else{
+            FlowRouter.go('/');
+        }
+    }
 });
 
 Template.course_edit_form.helpers({

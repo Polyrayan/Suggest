@@ -41,7 +41,6 @@ Template.project_create_form.events({
     },
     'keyup .js-searchStudent'(event , instance){
         event.preventDefault();
-        console.log(new RegExp('.*' + Session.get("searchStudent") + ' *.'));
         Session.set("searchStudent",document.getElementById("searchStudent").value);
     },
     'click .js-checkbox-member'(event){
@@ -54,6 +53,8 @@ Template.project_create_form.events({
         var myMembers = "";
         myMembers = addAllMembers(myMembers);
         document.getElementById("stringMyMembers").innerHTML = "Membre : Vous," + myMembers;
+    },'click .js-goto-projects'(){
+        FlowRouter.go('/projects');
     }
 });
 
@@ -152,7 +153,16 @@ Template.project_page.helpers({
         return Projects.findOne({_id : FlowRouter.getParam('projectId')});
     },
     idealSizeGrid(number){
-        return 12/number;
+        if(number<3){
+            return 4;
+        }
+        else if(number<4){
+            return 3
+        }
+        else{
+            return 2
+        }
+
     },
     fewMembers(number){
         return number < 5 ;
@@ -196,14 +206,6 @@ Template.project_edit_form.events({
             }
         });
     },
-    'click .js-edit-members'(event){
-        // A FIXER
-        event.preventDefault();
-        const exMemberId = event.target.exMemberId.value;
-        console.log(exMemberId);
-        // const members = Projects.findOne({_id : FlowRouter.getParam('projectId')});
-
-    }
 });
 
 Template.project_progress.helpers({

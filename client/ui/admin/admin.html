@@ -73,9 +73,9 @@
                 </div>
                 <div class="card-content">
                     {{#if course.project}}
-                        <a href="courses/projects/{{course._id}}/annals" class="js-goto-project-course" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
+                        <a href="/projects" class="js-goto-project-course text-dark" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
                     {{/if}}
-                    <a href="{{course.section}}/{{course._id}}/annals" title="sujets"> {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
+                    <a href="/courses/{{course.section}}/{{course._id}}/annals" title="sujets" class="text-muted"> {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
                     <a href="" title="correction">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
                     <div class="btn-group">
                         <button class="btn btn-sm btn-warning js-edit-course" name="editCourse" value="{{course._id}}"> éditer </button>

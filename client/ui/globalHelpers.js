@@ -132,3 +132,7 @@ Template.registerHelper('nbCorrections', function(courseId){
 Template.registerHelper('redirect', function(){
     return Meteor.myGlobalFunctions.redirect();
 });
+
+Template.registerHelper('sumUp',function (section) {
+    return Meteor.myGlobalFunctions.sumUp(section);
+});

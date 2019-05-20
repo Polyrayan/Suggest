@@ -54,6 +54,7 @@
 </template>
 
 <template name="annal_edit_form">
+    {{#if Template.subscriptionsReady}}
     <div class="card my-2">
         <h5 class="card-header"> Modifier le Sujet {{getFullAnnalName getAnnal._id}}</h5>
         <div class="card-body">
@@ -81,6 +82,7 @@
                     </label>
                     <div class="my-1 text-right">
                         <button type="button" class="btn btn-danger float-left js-delete-annal">Supprimer</button>
+                        <button class="btn btn-outline-secondary js-goto-annal-page"> Annuler</button>
                         <button type="submit" class="btn btn-success"> Modifier </button>
                     </div>
                 </form>
@@ -89,6 +91,9 @@
             {{/if}}
         </div>
     </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="annal_list">
@@ -115,7 +120,7 @@
                 </div>
             </div>
                 <div class="text-right text-white">
-                    <a class="btn btn-dark js-goto-create-correction"> Ajouter une correction </a>
+                    <button class="btn btn-dark js-goto-create-correction" name="annalId" value="{{annal._id}}"> Ajouter une correction </button>
                     {{#if isAuthorizedToEditThisAnnal annal}}
                         <a href="annals/{{ annal._id}}/edit" class="btn  btn-warning js-go-to-edit-annal"> Modifier </a>
                     {{/if}}

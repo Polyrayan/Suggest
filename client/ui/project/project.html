@@ -20,10 +20,10 @@
             {{>task_create_form}}
         </div>
     {{/if}}
-    {{#if fewMembers project.members.length}}
         <div class="row text-center">
+            <div class="offset-lg-1"></div>
             {{#each member in project.members}}
-                <div class="col-lg-{{idealSizeGrid project.members.length}} mb-5">
+                <div class="col-lg-{{idealSizeGrid project.members.length}} col-sm-12 mb-5">
                     <div class="card-header">
                         <h5 class="card-title"> {{getFullUserName member}} </h5>
                     </div>
@@ -31,13 +31,6 @@
                 </div>
             {{/each}}
         </div>
-    {{else}}
-        {{#each member in project.members}}
-            <div>
-                {{getFullUserName member}}
-            </div>
-        {{/each}}
-    {{/if}}
 </template>
 
 <template name="project_create_form">
@@ -65,7 +58,7 @@
                             <h6 class="text-center text-muted"> Aucun étudiant à ajouter au projet </h6>
                         {{/each}}
                         <div class="my-1 text-right">
-                            <button class="btn btn-outline-secondary"> Annuler</button>
+                            <button class="btn btn-outline-secondary js-goto-projects"> Annuler</button>
                             <button type="submit" class="btn btn-success"> Créer </button>
                         </div>
                     </form>
@@ -101,16 +94,6 @@
                                 {{/if}}
                             {{/each}}
                         </select>
-                        <p class="card-subtitle text-muted mb-2">
-                            Membres :
-                            {{#each member in project.members}}
-                                {{#if $neq getUserId member project.ownerId}}
-                                        <p class="badge badge-light text-muted ">{{getFullUserName member}}  <a href="" class="text-danger js-edit-members" >x</a></p>
-                                {{else}}
-                                    <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
-                                {{/if}}
-                        {{/each}}
-                        </p>
                             <div class="my-1 text-right">
                                 <button type="button" class="btn btn-danger float-left js-delete-project">Supprimer</button>
                                 <a class="btn-btn-outline-secondary" href="/project/{{project._id}}"></a>
