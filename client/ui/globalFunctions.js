@@ -1,10 +1,10 @@
 import {Projects, Tasks , Annals , Courses , Corrections} from "../../both";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Meteor.myGlobalFunctions = {
     // User
     isAdmin : function () {
-        const user = Meteor.users.findOne({_id : Meteor.userId()});
-        return !!(user && user.profile && user.profile.admin);
+        return (Meteor.user().profile.admin === true);
     },
     isConnected : function () {
       return !!Meteor.userId();
@@ -20,6 +20,23 @@ Meteor.myGlobalFunctions = {
         let correctionFound = Corrections.findOne({_id: FlowRouter.getParam('correctionId')});
         let creatorId = correctionFound && correctionFound.creatorId;
         return !!(creatorId === Meteor.userId() || Meteor.myGlobalFunctions.isAdmin());
+    },
+    isAuthorizedToEditProject : function(){
+        let projectFound = Projects.findOne({_id: FlowRouter.getParam('projectId')});
+        let ownerId = projectFound && projectFound.ownerId;
+        return !!(ownerId === Meteor.userId() || Meteor.myGlobalFunctions.isAdmin());
+    },
+    isAuthorizedToEditTask : function(){
+        let projectFound = Projects.findOne({_id: FlowRouter.getParam('projectId')});
+        let members = projectFound && projectFound.members;
+        return !!(Meteor.myGlobalFunctions.isInArray(Meteor.userId(),members) || Meteor.myGlobalFunctions.isAdmin());
+    },
+    isInArray : function(element,array){
+        let res = false;
+        for (let i = 0; i < array.length; i++) {
+            if (element === array[i]) res = true;
+        }
+        return res;
     },
     //Project
     getProjectOfThisPage: function () {
@@ -85,13 +102,17 @@ Meteor.myGlobalFunctions = {
         return Corrections.findOne({_id : FlowRouter.getParam('correctionId')});
     },
     getNbLike : function(correctionId){
-        const correctionFound = Corrections.findOne({correctionId : correctionId});
+        const correctionFound = Corrections.findOne({_id : correctionId});
         return correctionFound && correctionFound.like.membersId.length;
     },
     getNbDislike : function(correctionId){
-        const correctionFound = Corrections.findOne({correctionId : correctionId});
+        const correctionFound = Corrections.findOne({_id : correctionId});
         return correctionFound && correctionFound.dislike.membersId.length;
     },
+    gotoProjectPage : function () {
+        FlowRouter.go('/projects/:projectId' , {projectId : FlowRouter.getParam('projectId')});
+    },
+
     gotoAnnalPage : function () {
         FlowRouter.go("/courses/:section/:courseId/annals/:annalId", {
             section: FlowRouter.getParam('section'),
@@ -125,11 +146,19 @@ Meteor.myGlobalFunctions = {
                 annalId: FlowRouter.getParam('annalId'),
                 correctionId: FlowRouter.getParam('correctionId'),
             });
-        }
-        else {
+        } else {
             throw Meteor.errorMessage('unauthorized');
         }
     },
+    gotoEditProject : function () {
+        if (Meteor.myGlobalFunctions.isAuthorizedToEditProject()) {
+            FlowRouter.go("/projects/:projectId/edit", {projectId : FlowRouter.getParam('projectId')});
+        } else {
+            throw Meteor.errorMessage('unauthorized');
+        }
+    },
+
+
     getMembersWhoLiked : function(){
         const correctionFound = Corrections.findOne({_id : FlowRouter.getParam('correctionId')});
         return  correctionFound && correctionFound.like && correctionFound.like.membersId;
@@ -159,6 +188,22 @@ Meteor.myGlobalFunctions = {
             }
         }
         return alreadyDisliked
+    },
+    nbAnnal(courseId){
+        return Annals.find({course : courseId}).fetch().length
+    },
+    nbProject(courseId){
+        return Projects.find({course : courseId}).fetch().length
+    },
+    nbCorrections(courseId){
+        let sum = 0;
+        const annals = Annals.find({course : courseId}).fetch();
+        for (i = 0; i < annals.length ; i++){
+            sum += Corrections.find({annalId : annals[i]._id }).fetch().length;
+        }
+        return sum
+    },
+    redirect(){
+        return FlowRouter.go('/');
     }
-
 };

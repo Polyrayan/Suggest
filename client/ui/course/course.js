@@ -1,36 +1,26 @@
 import './course.html';
 import {Annals, Courses} from "../../../both";
 
+Template.course_list.onCreated(function () {
+    this.subscribe('courses.list', FlowRouter.getParam('section'));
+});
 
 Template.course_list.helpers({
     courses(){
         return Courses.find({ section : FlowRouter.getParam('section') }).fetch();
-    },
-    coursesS1(){
-        return Courses.find({ section : FlowRouter.getParam('section'), semester : 1  }).fetch();
-    },
-    coursesS2(){
-        return Courses.find({ section : FlowRouter.getParam('section'), semester : 2 }).fetch();
     }
 });
 
 Template.course_single.helpers({
     containsAnnals(courseId){
         return !!Annals.findOne({course: courseId});
-    },
-    nbAnnal(courseId){
-        return Annals.find({course : courseId}).fetch().length
-    },
-    nbProject(courseId){
-        return Projects.find({course : courseId}).fetch().length
-    },
-    nbCorrections(courseId){
-          let sum = 0;
-          const annals = Annals.find({course : courseId}).fetch();
-          for (i = 0; i < annals.length ; i++){
-              sum += Corrections.find({annalId : annals[i]._id }).fetch().length;
-          }
-          return sum
+    }
+});
+
+Template.course_single.events({
+    'click .js-goto-filter-project'(event) {
+        event.preventDefault();
+        FlowRouter.go('/projects');
     }
 });
 
@@ -50,4 +40,60 @@ Template.course_page.events({
             Session.set('redirection', route);
             Modal.show('login_modal');
         }    }
+});
+
+Template.course_page.helpers({
+    admin(){
+        return Meteor.user().profile.admin === true;
+    }
+});
+
+Template.course_create_form.events({
+    'submit .js-create-course'(event) {
+        event.preventDefault();
+        const name = event.target.name.value;
+        const section = FlowRouter.getParam('section');
+        const semester = parseInt(event.target.semester.value);
+        let project = (event.target.project.value === "yes");
+
+        Meteor.call('insertCourse', {id: name, section: section, project: project, semester: semester},
+            function (error) {
+                if (!error) {
+                    event.target.name.value = '';
+                    event.target.project.value = '';
+                    event.target.semester.value = '';
+                    FlowRouter.go('/admin/sections/:section/courses',{section : FlowRouter.getParam('section')});
+                }
+            });
+    }
+});
+Template.course_edit_form.onCreated(function () {
+    this.subscribe('course.edit', FlowRouter.getParam('courseId'));
+});
+
+Template.course_edit_form.events({
+    'submit .js-edit-course'(event) {
+        event.preventDefault();
+
+        const name = event.target.name.value;
+        const section = FlowRouter.getParam('section');
+        const semester = parseInt(event.target.semester.value);
+        let project = (event.target.project.value === "yes");
+
+        Meteor.call('updateCourse', {id: name, section: section, project: project, semester: semester}
+            , function (error, result) {
+                if (!error) {
+                    FlowRouter.go('/admin/sections/:section/courses',{section : FlowRouter.getParam('section')});
+                }
+            });
+    },
+});
+
+Template.course_edit_form.helpers({
+    course(){
+        return Courses.findOne({_id : FlowRouter.getParam('courseId')});
+    },
+    admin(){
+        return Meteor.user().profile.admin === true;
+    }
 });

@@ -1,5 +1,9 @@
-import './navbar.html'; 
-import '../globalFunctions';
+import './navbar.html';
+
+Template.navbar.onCreated(function () {
+    this.subscribe('navbar');
+});
+
 Template.navbar.events({
     'click .js-open-login-modal'() {
         Modal.show('login_modal')
@@ -16,13 +20,32 @@ Template.navbar.events({
         }
     },
     'click .js-goto-my-courses'() {
+        console.log("ok");
         if (Meteor.myGlobalFunctions.isConnected()){
             FlowRouter.go('/courses/'+Meteor.myGlobalFunctions.getUser().profile.section);
         }else{
             Modal.show('login_modal');
         }
     },
+    'click .js-goto-project-list'() {
+        if (Meteor.myGlobalFunctions.isConnected()){
+            FlowRouter.go('/projects/');
+        }else{
+            Session.set('redirection', '/projects');
+            Modal.show('login_modal');
+        }
+    },
+    'click .js-goto-admin-page'() {
+        if (Meteor.user().profile.admin === true){
+            FlowRouter.go('/admin/sections/');
+        }
+    }
+});
 
+Template.navbar.helpers({
+   admin(){
+       return Meteor.user() && Meteor.user().profile && Meteor.user().profile.admin;
+   }
 });
 
 Template.login_modal.onCreated(function () {

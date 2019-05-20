@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
 import '../both';
+import './publications';
 
 //To forbid users from making any modifications to their user document:
 Meteor.users.deny({

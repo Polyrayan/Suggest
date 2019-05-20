@@ -1,24 +1,32 @@
 <template name="project_page">
-	<div class="card my-2">
-        <div class="card-body">
-            <div class="text-center">
-                <h2 class="card-title"> {{project.title}} </h2>
-                <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}} </h6>
-                <a href="/project/{{project._id}}/edit" class="btn btn-primary btn-sm mb-3"> Modifier</a>
-                {{>project_progress project = project}}
+    {{#if Template.subscriptionsReady}}
+        <div class="card my-2">
+            <div class="card-body">
+                <div class="text-center">
+                    <h2 class="card-title"> {{project.title}} </h2>
+                    <h6 class="card-subtitle text-muted mb-2"> Créé le {{ getDisplayDateTime project.createdAt}} par {{getFullUserName project.ownerId}} </h6>
+                    {{#if isAuthorizedToEditProject}}
+                        <a href="" class="btn btn-primary btn-sm js-goto-edit-project mb-3"> Modifier</a>
+                    {{/if}}
+                        {{>project_progress project = project}}
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="card mb-5">
-        {{>task_form}}
-        {{>task_list}}
-    </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
+    {{#if isAuthorizedToEditProject}}
+        <div class="card mb-5">
+            {{>task_create_form}}
+        </div>
+    {{/if}}
     {{#if fewMembers project.members.length}}
         <div class="row text-center">
             {{#each member in project.members}}
-                <div class="col-lg-{{idealSizeGrid project.members.length}}">
-                    {{getFullUserName member}}
+                <div class="col-lg-{{idealSizeGrid project.members.length}} mb-5">
+                    <div class="card-header">
+                        <h5 class="card-title"> {{getFullUserName member}} </h5>
+                    </div>
                     {{> task_list member = member}}
                 </div>
             {{/each}}
@@ -33,92 +41,151 @@
 </template>
 
 <template name="project_create_form">
-    <div class="card my-2">
-        <h5 class="card-header"> Créer un Projet</h5>
-        <div class="card-body">
-            <form class="js-create-project">
-                <input type="text" class="form-control mb-2" placeholder="Titre" name="title">
-                <select name="course" class="form-control mb-2">
-                    {{#each course in coursesWithProjects getUserSection}}
-                        <option value="{{course._id}}" >{{course._id}}</option>
-                    {{/each}}
-                </select>
-                <p class="js-members-project" id="stringMyMembers"> Membre : Vous </p>
+    {{#if Template.subscriptionsReady}}
+        <div class="card my-2">
+            <h5 class="card-header"> Créer un Projet</h5>
+            <div class="card-body">
+                {{#if currentUser}}
+                    <form class="js-create-project">
+                        <input type="text" class="form-control mb-2" placeholder="Titre" name="title" required>
+                        <select name="course" class="form-control mb-2" required>
+                                <option value=""> Matières </option>
+                            {{#each course in courses}}
+                                <option value="{{course._id}}" >{{course._id}}</option>
+                            {{/each}}
+                        </select>
+                        <p class="js-members-project" id="stringMyMembers"> Membre : Vous </p>
 
-                <input class="form-control mr-sm-2 js-searchStudent" type="search" id="searchStudent" placeholder="Rechercher un étudiant..">
-                {{#each student in studentsOfMySection}}
-                    <div class=" col-4">
-                        <ul class="list-group ">
-                            {{> student_single student = student }}
-                        </ul>
-                    </div>
+                        <input class="form-control mr-sm-2 js-searchStudent" type="search" id="searchStudent" placeholder="Rechercher un étudiant..">
+                        {{#each student in studentsOfMySection}}
+                            <div class="form-control">
+                                    {{> student_single student = student }}
+                            </div>
+                        {{else}}
+                            <h6 class="text-center text-muted"> Aucun étudiant à ajouter au projet </h6>
+                        {{/each}}
+                        <div class="my-1 text-right">
+                            <button class="btn btn-outline-secondary"> Annuler</button>
+                            <button type="submit" class="btn btn-success"> Créer </button>
+                        </div>
+                    </form>
                 {{else}}
-                    <h6 class="text-center text-muted"> Aucun étudiant à ajouter au projet </h6>
-                {{/each}}
-                <div class="my-1 text-right">
-                    <button class="btn btn-outline-secondary"> Annuler</button>
-                    <button type="submit" class="btn btn-success"> Créer </button>
-                </div>
-            </form>
+                    <h5 class="text-muted text-center"> Vous devez être connecté pour créer un projet</h5>
+                    {{login}}
+                {{/if}}
+            </div>
         </div>
-    </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="student_single">
-            <li class="text-muted list-group-item">
-                <input class="js-checkbox-member" type="checkbox" name="member" value="{{student._id}}" > {{student.profile.firstName }} {{student.profile.name }}
-            </li>
+    <input class="js-checkbox-member" type="checkbox" name="member" value="{{student._id}}" > {{student.profile.firstName }} {{student.profile.name }}
 </template>
 
 <template name="project_edit_form">
     <div class="card my-2">
-        <h5 class="card-header"> Modifier un Projet</h5>
+        <h5 class="card-header"> Modification du Projet</h5>
         <div class="card-body">
-            <form class="js-edit-project">
-                <input type="text" class="form-control mb-2" placeholder="Titre" name="title" value="{{project.title}}">
-                <select name="course" id="select_course" class="form-control mb-2">
-                    {{#each course in coursesWithProjects project.section}}
-                        {{#if $eq course._id project.course }}
-                            <option value="{{course._id}}" selected>{{course._id}}</option>
-                        {{else}}
-                            <option value="{{course._id}}" >{{course._id}}</option>
-                        {{/if}}
-                    {{/each}}
-                </select>
-                <p class="card-subtitle text-muted mb-2">
-                    Membres :
-                    {{#each member in project.members}}
-                        {{#if $neq getUserId member project.ownerId}}
-                                <p class="badge badge-light text-muted ">{{getFullUserName member}}  <a href="" class="text-danger js-edit-members" >x</a></p>
-                        {{else}}
-                            <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
-                        {{/if}}
-                    {{/each}}
-                </p>
-                <div class="my-1 text-right">
-                    <button type="button" class="btn btn-danger float-left js-delete-project">Supprimer</button>
-                    <a class="btn-btn-outline-secondary" href="/project/{{project._id}}"></a>
-                    <button type="submit" class="btn btn-success"> Modifier </button>
-                </div>
-            </form>
+            {{#if Template.subscriptionsReady}}
+                {{#if isAuthorizedToEditProject}}
+                    <form class="js-edit-project">
+                        <input type="text" class="form-control mb-2" placeholder="Titre" name="title" value="{{project.title}}" required>
+                        <select name="course" id="select_course" class="form-control mb-2" required>
+                            {{#each course in coursesWithProjects project.section}}
+                                {{#if $eq course._id project.course }}
+                                    <option value="{{course._id}}" selected>{{course._id}}</option>
+                                {{else}}
+                                    <option value="{{course._id}}" >{{course._id}}</option>
+                                {{/if}}
+                            {{/each}}
+                        </select>
+                        <p class="card-subtitle text-muted mb-2">
+                            Membres :
+                            {{#each member in project.members}}
+                                {{#if $neq getUserId member project.ownerId}}
+                                        <p class="badge badge-light text-muted ">{{getFullUserName member}}  <a href="" class="text-danger js-edit-members" >x</a></p>
+                                {{else}}
+                                    <p class="badge badge-light text-muted">{{getFullUserName member}}</p>
+                                {{/if}}
+                        {{/each}}
+                        </p>
+                            <div class="my-1 text-right">
+                                <button type="button" class="btn btn-danger float-left js-delete-project">Supprimer</button>
+                                <a class="btn-btn-outline-secondary" href="/project/{{project._id}}"></a>
+                                <button type="submit" class="btn btn-success"> Modifier </button>
+                            </div>
+                        </form>
+                {{else}}
+                    <h5 class="text-center text-danger"> Vous n'êtes pas autorisé à modifier ce projet. </h5>
+                {{/if}}
+            {{else}}
+                {{> spinner}}
+            {{/if}}
         </div>
     </div>
 </template>
 
 <template name="project_list">
-	<h3> Liste des projets </h3>
-    {{#each project in projects}}
-        {{> project_single  project = project}}
+    <div class="row my-5">
+        <div class="col-lg-5 col-md-4 col-sm-4">
+            <h3> Liste des projets </h3>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <button class="btn btn-outline-secondary mr-2 js-goto-create-project"> Créer un projet </button>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4">
+            <select class="form-control js-goto-filter-course" name="selectedCourse">
+                <option value=""> Trier par matières</option>
+                {{#if Template.subscriptionsReady}}
+                    {{#each course in myCourses}}
+                        {{#if $eq getFilter course._id}}
+                            <option value="{{course._id}}" selected> {{course._id}}</option>
+                        {{else}}
+                            <option value="{{course._id}}"> {{course._id}}</option>
+                        {{/if}}
+                    {{/each}}
+                {{/if}}
+            </select>
+        </div>
+    </div>
+    {{#if Template.subscriptionsReady}}
+        {{#each project in projects}}
+            {{>project_single  project = project}}
+        {{else}}
+            {{#if currentUser}}
+                <div class="mt-5">
+                    <h4 class="text-center text-muted"> Aucun projet à afficher </h4>
+                </div>
+            {{else}}
+                <div class="mt-5">
+                    {{login}}
+                    <h4 class="text-center text-muted"> Vous devez être connecté pour accéder aux projet de votre section </h4>
+                </div>
+            {{/if}}
+        {{/each}}
+        {{#if projects}}
+            <div class="d-flex">
+                <ul class="pagination mx-auto">
+                    {{#each page in pagination}}
+                        <li class="page-item {{#if page.active}}active{{/if}}">
+                            <a href="/projects/page/{{page.index}}" class="page-link"> {{page.index}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
     {{else}}
-        <h4 class="text-center text-muted"> Aucun projet à afficher </h4>
-    {{/each}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="project_single">
     <div class="card mb-2">
         <div class="card-header">
             <div class="row">
-                <h5 class="card-title col-md-10"><a href="/project/{{project._id}}"> {{project.title}} </a> </h5>
+                <h5 class="card-title col-md-10"><a href="/projects/{{project._id}}"> {{project.title}} </a> </h5>
                 <h5 class=" col-md-2 card-title text-right"> {{project.course}} </h5>
             </div>
         </div>
@@ -141,7 +208,7 @@
     <h6> {{getNbCompletedTasksOfThisProject project._id}} / {{getNbTasksOfThisProject project._id}}</h6>
     <div class="progress">
         {{#if fewPercentage project._id}}
-            <div class="progress-bar" role="progressbar" style="width: 2%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100">0%</div>
+            <div class="progress-bar" role="progressbar" style="width: 4%;" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100">0%</div>
         {{else}}
             <div class="progress-bar" role="progressbar" style="width: {{percentage project._id}}%;" aria-valuenow="{{percentage project._id}}" aria-valuemin="0" aria-valuemax="100">{{percentage project._id}}%</div>
         {{/if}}

@@ -14,21 +14,91 @@
 </template>
 
 <template name="course_create_form">
-    // TODO
+    {{#if Template.subscriptionsReady}}
+        <div class="card my-2">
+            <h5 class="card-header"> Ajouter un Cours</h5>
+            <div class="card-body">
+                <form class="js-create-course">
+                    <input type="text" class="form-control mb-2" placeholder="Nom du cours" name="name" required>
+                    <select name="semester" class="form-control mb-2" required>
+                        <option value=""> Semestre </option>
+                        <option value="1" >Semestre 1</option>
+                        <option value="2" >Semestre 2</option>
+                    </select>
+                    <div>
+                        <label class="mr-2"> Cette matière comporte des projets :</label>
+                            <input type="radio" id="containProject" name="project" value="yes" >
+                            <label for="containProject" class="mr-1">Oui</label>
+                            <input type="radio" id="noProject" name="project" value="no" required>
+                            <label for="noProject">Non</label>
+                    </div>
+                    <div class="my-1 text-right">
+                        <button class="btn btn-outline-secondary"> Annuler</button>
+                        <button type="submit" class="btn btn-success"> Créer </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="course_edit_form">
-    // TODO
+    {{#if Template.subscriptionsReady}}
+        {{#if admin}}
+        <div class="card my-2">
+            <h5 class="card-header"> Modifier un Cours</h5>
+            <div class="card-body">
+                <form class="js-edit-course">
+                    <input type="text" class="form-control mb-2" placeholder="Nom du cours" name="name" value="{{course._id}}" required>
+                    <select name="semester" class="form-control mb-2" required>
+                        <option value=""> Semestre </option>
+                        {{#if $eq course.semester 1}}
+                            <option value="1" selected  >Semestre 1</option>
+                            <option value="2">Semestre 2</option>
+                        {{else}}
+                            <option value="1">Semestre 1</option>
+                            <option value="2" selected>Semestre 2</option>
+                        {{/if}}
+                    </select>
+                    <div>
+                        <label class="mr-2"> Cette matière comporte des projets :</label>
+                        {{#if course.project}}
+                            <input type="radio" id="containProject" name="project" value="yes" checked >
+                            <label for="containProject" class="mr-1">Oui</label>
+                            <input type="radio" id="noProject" name="project" value="no" required>
+                            <label for="noProject">Non</label>
+                        {{else}}
+                            <input type="radio" id="containProject" name="project" value="yes">
+                            <label for="containProject" class="mr-1">Oui</label>
+                            <input type="radio" id="noProject" name="project" value="no" required checked>
+                            <label for="noProject">Non</label>
+                        {{/if}}
+                    </div>
+                    <div class="my-1 text-right">
+                        <button class="btn btn-outline-secondary"> Annuler</button>
+                        <button type="submit" class="btn btn-success"> Créer </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{else}}
+            {{redirect}}
+        {{/if}}
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="course_list">
-
     <h3> Semestre 1 </h3>
+    {{#if Template.subscriptionsReady}}
     <div class="row mb-3">
         {{#each course in coursesS1}}
-                <div class="col-lg-3 mb-3">
-                    {{> course_single  course = course}}
-                </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                {{> course_single  course = course}}
+            </div>
         {{else}}
             <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
         {{/each}}
@@ -36,13 +106,16 @@
     <h3> Semestre 2 </h3>
     <div class="row mb-3">
         {{#each course in coursesS2}}
-            <div class="col-lg-3 mb-3">
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                 {{> course_single  course = course}}
             </div>
         {{else}}
             <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
         {{/each}}
     </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="course_single">
@@ -50,9 +123,9 @@
         <div class="card-body mb-2">
             <a href="{{course.section}}/{{course._id}}/annals"><h5> {{course._id}} </h5></a>
             {{#if course.project}}
-                <a href="courses/projects/{{course._id}}/annals" class="js-goto-project-course" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
+                <a href="" class="js-goto-filter-project" title="projets" id="{{course._id}}">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
             {{/if}}
-            <a href="{{course.section}}/{{course._id}}/annals" title="sujets"> {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
+            <a href="{{course.section}}/{{course._id}}/annals" title="sujets" > {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
             <a href="" title="correction">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
         </div>
     </div>

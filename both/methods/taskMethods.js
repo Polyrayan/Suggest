@@ -20,8 +20,7 @@ Meteor.methods({
     updateTask(task){
         taskUpsertSchema.validate(task);
         Meteor.myMethodFunctions.isConnected();
-        //Meteor.myMethodFunctions.isMemberOfThisProject(task.projectId);
-        console.log(task);
+
         Tasks.update({_id : task.taskId},
             {
                 $set: {

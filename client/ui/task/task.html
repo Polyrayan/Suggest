@@ -1,4 +1,4 @@
-<template name="task_form">
+<template name="task_create_form">
     <div class="card-body">
         <form class="js-create-task">
             <label for="taskName"> Ajouter une tâche :</label>
@@ -41,17 +41,34 @@ pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="f
 </template>
 
 <template name="task_single">
-    <div class="card">
-        <div class="row">
-            <div class="offset-1"></div>
-            <div class="col-md-9">
-                <p class="text-muted"> {{task.content}}</p>
-            </div>
-            <div class="col-md-1 btn-group">
-                <a href="/project/{{task.projectId}}/task/{{task._id}}/edit" title="options" class="js-open-edit-form-modal mr-1"> <i class="fa fa-sliders"></i> </a>
+    {{#if task.completed}}
+        <div class="card" style="background-color: rgba(0,255,5,0.17)">
+            <div class="row">
+                <div class="col-lg-10 col-sm-8 col-md-8">
+                    <p class="text-muted mt-1"> {{task.content}}</p>
+                </div>
+                <div class="col-lg-2 col-sm-4 col-md-4 ">
+                    {{#if isAuthorizedToEditTask}}
+                        <a href="/projects/{{task.projectId}}/tasks/{{task._id}}/edit" title="options" class="mr-1 text-right"> <i class="fa fa-sliders"></i> </a>
+                    {{/if}}
+                </div>
             </div>
         </div>
-    </div>
+    {{else}}
+        <div class="card">
+            <div class="row">
+                <div class="offset-1"></div>
+                <div class="col-lg-9 col-sm-8 col-md-8">
+                    <p class="text-muted mt-1"> {{task.content}}</p>
+                </div>
+                {{#if isAuthorizedToEditTask}}
+                    <div class="col-lg-2 col-sm-4 col-md-4 ">
+                        <a href="/projects/{{task.projectId}}/tasks/{{task._id}}/edit" title="options" class="js-open-edit-form-modal mr-1"> <i class="fa fa-sliders"></i> </a>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
 </template>
 
 <template name="task_edit_form">
@@ -60,11 +77,11 @@ pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="f
         <div class="card-body">
             <form class="js-edit-task">
                 <label for="taskName"> Nom de la tâche : </label>
-                <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName" value="{{task.content}}">
+                <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName" value="{{task.content}}" required>
                 <label for="difficulty_select"> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
 Suggest vous conseille donc d'estimer la difficulté en fonction de la durée et les notions qu'il faut maîtriser
 pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="fa fa-question-circle text-primary"></i> </i> </label>
-                <select name="difficulty" class="form-control mb-2" id="difficulty_select">
+                <select name="difficulty" class="form-control mb-2" id="difficulty_select" required>
                     {{#if $eq task.difficulty 1}}
                         <option value="1" selected >Facile</option>
                     {{else}}
@@ -86,7 +103,7 @@ pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="f
                         <option  value="4">Très difficile</option>
                     {{/if}}
                 </select>
-                <select name="workerId" class="form-control mb-2">
+                <select name="workerId" class="form-control mb-2" required>
                     {{#each member in getMembersOfThisProject}}
                         {{#if $eq task.workerId member}}
                             <option  value="{{member}}" selected >{{getFullUserName member}}</option>

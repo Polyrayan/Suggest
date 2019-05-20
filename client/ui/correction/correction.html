@@ -1,4 +1,5 @@
 <template name="correction_page">
+    {{#if Template.subscriptionsReady}}
     <div class="card my-2">
         <div class="card-body">
             <div class="text-center">
@@ -10,45 +11,57 @@
                 {{/if}}
                 <div>
                     <a class="float-left btn btn-dark text-white js-goto-annal-page"> <i class="fa fa-chevron-left"></i> retour au sujet </a>
-
-                    <a> Que pensez-vous de cette correction :  </a>
-                    <a href="" class="js-like-correction mr-2"><i class="fa fa-thumbs-up text-primary"></i> {{getNbLike getCorrection._id}}</a>
-                    <a href="" class="js-dislike-correction "> <i class="fa fa-thumbs-down text-primary"></i> {{getNbDislike getCorrection._id}} </a>
-
                     <a class="float-right btn btn-dark text-white js-goto-create-correction"> Ajouter une autre correction <i class="fa fa-chevron-right"></i> </a>
                 </div>
             </div>
         </div>
         <div class="card-body text-center">
+            <a class=""> Que pensez-vous de cette correction :  </a>
+            <a href="" class="js-like-correction mr-2"><i class="fa fa-thumbs-up text-success"></i> {{getNbLike getCorrection._id}}</a>
+            <a href="" class="js-dislike-correction "> <i class="fa fa-thumbs-down text-danger"></i> {{getNbDislike getCorrection._id}} </a>
+        </div>
+        <div class="card-body text-center">
             <iframe src="{{splitLink getCorrection.link}}" height="700" width="900" class=""></iframe>
         </div>
     </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="correction_create_form">
-    <div class="card my-2">
-        <h5 class="card-header"> Proposer une correction du sujet {{getFullAnnalName getAnnal._id}}</h5>
-        <div class="card-body">
-            <form class="js-create-correction">
-                <label for="linkInput"> Drive :
-                    <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput" required>
-                </label>
-                <label for="select_reliability"> Fiabilité de la correction :
-                    <select name="reliability" class="form-control mb-2" required id="select_reliability">
-                        <option value="" >Fiabilité de la correction</option>
-                        <option value="25%" > 25%</option>
-                        <option value="50%" > 50%</option>
-                        <option value="75%" > 75%</option>
-                        <option value="100%" > 100% (Approuvé par un professeur)</option>
-                    </select>
-                </label>
-                <div class="my-1 text-right">
-                    <button class="btn btn-outline-secondary"> Annuler</button>
-                    <button type="submit" class="btn btn-success"> Créer </button>
-                </div>
-            </form>
+    {{#if Template.subscriptionsReady}}
+        <div class="card my-2">
+            <h5 class="card-header"> Proposer une correction du sujet {{getFullAnnalName getAnnal._id}}</h5>
+            <div class="card-body">
+                {{#if currentUser}}
+                    <form class="js-create-correction">
+                        <label for="linkInput"> Drive :
+                            <input type="text" class="form-control mb-2" placeholder="Lien du sujet (Drive)" name="link" id="linkInput" required>
+                        </label>
+                        <label for="select_reliability"> Fiabilité de la correction :
+                            <select name="reliability" class="form-control mb-2" required id="select_reliability">
+                                <option value="" >Fiabilité de la correction</option>
+                                <option value="25%" > 25%</option>
+                                <option value="50%" > 50%</option>
+                                <option value="75%" > 75%</option>
+                                <option value="100%" > 100% (Approuvé par un professeur)</option>
+                            </select>
+                        </label>
+                        <div class="my-1 text-right">
+                            <button class="btn btn-outline-secondary"> Annuler</button>
+                            <button type="submit" class="btn btn-success"> Créer </button>
+                        </div>
+                    </form>
+                {{else}}
+                    <h5 class="text-muted text-center"> Vous devez être connecté pour créer une correction</h5>
+                    {{login}}
+                {{/if}}
+            </div>
         </div>
-    </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="correction_edit_form">
@@ -82,9 +95,14 @@
 </template>
 
 <template name="correction_list">
-
+    {{#each correction in corrections}}
+        {{>correction_single correction = correction}}
+    {{/each}}
 </template>
 
 <template name="correction_single">
-    // TODO
+    <div class="mb-3">
+        <a href="{{getAnnal._id}}/corrections/{{correction._id}}"> correction de {{ getFullUserName correction.creatorId}}</a>
+        <a>(<i class="fa fa-thumbs-up text-success"></i> {{getNbLike correction._id}} <i class="fa fa-thumbs-down text-danger"></i> {{getNbDislike correction._id}})    </a>
+    </div>
 </template>

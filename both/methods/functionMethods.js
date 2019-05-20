@@ -6,6 +6,9 @@ Meteor.myMethodFunctions = {
             throw new Meteor.Error('User-not-connected',"user must be connected to do this");
         }
     },
+    isAdmin : function(){
+      return Meteor.user().profile.admin;
+    },
     isAuthorizedToDeleteProject : function (projectId) {
         let projectFound = Projects.findOne({_id: projectId});
         if(!projectFound.ownerId !== Meteor.userId()){

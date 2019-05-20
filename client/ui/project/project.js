@@ -17,6 +17,9 @@ function addAllMembers(myMembers){
     }
     return myMembers;
 }
+Template.project_create_form.onCreated(function () {
+    this.subscribe('project.create');
+});
 
 Template.project_create_form.events({
     'submit .js-create-project'(event , instance){
@@ -65,35 +68,82 @@ Template.project_create_form.helpers({
             }
             return Meteor.users.find({
                     "profile.section": Meteor.user().profile.section,
-                    $or: [{
+                    $or: [
+                        {
                         "profile.name": {
-                            $regex: new RegExp('.*' + Session.get("searchStudent") + ' *.'),
+                            $regex: new RegExp(Session.get("searchStudent")),
                             $options: 'im'
+
                         }
                     },
                         {
                             "profile.firstName": {
-                                $regex: new RegExp('.*' + Session.get("searchStudent") + ' *.'),
+                                $regex: new RegExp(Session.get("searchStudent")),
                                 $options: 'im'
                             }
-                        }
+                        },
                     ],
+
                     _id: {$not: Meteor.user()._id}
                 },
                 {sort: [['profile.name', 'asc']]}).fetch();
         }
+    },
+    courses(){
+        return Courses.find().fetch();
     }
+});
+const PROJECTS_IN_PAGE = 4;
+
+Template.project_list.onCreated(function () {
+    //execute the code whenever the reactive var (here : page with flowRouter) is modify
+    this.autorun(() =>{
+        let currentPage = parseInt(FlowRouter.getParam('page') || 1);
+        let skip = (currentPage - 1) * PROJECTS_IN_PAGE;
+
+        // this to "create a link" between the subscription and the template
+        // when the template is created => start subscription
+        // when the template is destroyed => stop subscription
+        this.subscribe('projects.list', skip, PROJECTS_IN_PAGE, Session.get('filter'));
+    });
 });
 
 Template.project_list.helpers({
     projects(){
-        var user = Meteor.users.findOne({_id: Meteor.userId()});
-        if(user && user.profile && user.profile.section){
-            return Projects.find({ section : user.profile.section }).fetch();
-        }else{
-            return null;
+        return Projects.find({}, { sort: { createdAt : -1}}).fetch();
+    },
+    pagination(){
+        let projectsCount = Counts.get('projectsCount');
+        let pagesCount = Math.ceil(projectsCount / PROJECTS_IN_PAGE);
+        let currentPage = parseInt(FlowRouter.getParam('page') || 1);
+        let pages = [];
+        for (let i = 1; i <= pagesCount; i++){
+            pages.push({index: i, active: i === currentPage});
         }
+        return pages;
+    },
+    getFilter(){
+        return Session.get('filter')
     }
+});
+Template.project_list.events({
+   'change select'(event) {
+        event.preventDefault();
+        Session.set('filter',$(event.currentTarget).val());
+        FlowRouter.go('/projects/page/1');
+   },
+    'click .js-goto-create-project'() {
+        if (Meteor.myGlobalFunctions.isConnected()){
+            FlowRouter.go('/projects/create');
+        }else{
+            Session.set('redirection', '/projects/create');
+            Modal.show('login_modal');
+        }
+    },
+});
+
+Template.project_page.onCreated(function () {
+   this.subscribe('project.single', FlowRouter.getParam('projectId'));
 });
 
 Template.project_page.helpers({
@@ -106,6 +156,16 @@ Template.project_page.helpers({
     fewMembers(number){
         return number < 5 ;
     }
+});
+
+Template.project_page.events({
+   'click .js-goto-edit-project'(){
+       Meteor.myGlobalFunctions.gotoEditProject();
+   }
+});
+
+Template.project_edit_form.onCreated(function () {
+    this.subscribe('project.single', FlowRouter.getParam('projectId'));
 });
 
 Template.project_edit_form.helpers({
@@ -150,6 +210,6 @@ Template.project_progress.helpers({
         return (Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId) / Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) * 100).toFixed(2);
     },
     fewPercentage(projectId){
-        return (Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId) / Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) * 100 < 2);
+        return ( Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) === 0 ||Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId) / Meteor.myGlobalFunctions.getNbTasksOfThisProject(projectId) * 100 < 2);
     }
 });

@@ -3,7 +3,7 @@ import './task.html';
 import {Tasks , Projects } from "../../../both";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-Template.task_form.events({
+Template.task_create_form.events({
     'submit .js-create-task'(event, instance){
         event.preventDefault();
         if(Session.get('showManualForm')){
@@ -60,11 +60,7 @@ Template.task_edit_form.events({
         const content = event.target.content.value;
         const difficulty = parseInt(event.target.difficulty.value);
         const workerId = event.target.workerId.value;
-        let completed = false;
-
-        if (event.target.completed.value === "yes") {
-            completed = true;
-        }
+        let completed = (event.target.completed.value === "yes");
 
         Meteor.call('updateTask',{
                 content: content,
@@ -76,23 +72,31 @@ Template.task_edit_form.events({
             }
             ,function (error, result) {
                 if(!error){
-                    FlowRouter.go('/project/:projectId' , {projectId : FlowRouter.getParam('projectId')});
-                }else{
-                    console.log(error);
+                    Meteor.myGlobalFunctions.gotoProjectPage();
                 }
             });
     },
     'click .js-delete-task'(){
         Meteor.call('removeTask', FlowRouter.getParam('taskId'), function (error , result){
             if(!error){
-                FlowRouter.go('/project/:projectId' , {projectId : FlowRouter.getParam('projectId')});
+                Meteor.myGlobalFunctions.gotoProjectPage();
             }
         });
     },
+});
+
+Template.task_edit_form.onCreated(function () {
+    this.subscribe('project.single', FlowRouter.getParam('projectId'));
 });
 
 Template.task_edit_form.helpers({
     task() {
         return Tasks.findOne({_id : FlowRouter.getParam('taskId')});
     },
+});
+
+Template.task_single.events({
+   'click .js-edit-task'(){
+       Meteor.myGlobalFunctions.gotoEditTask();
+   }
 });

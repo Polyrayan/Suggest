@@ -1,34 +1,30 @@
 <template name="annal_page">
-    <div class="card my-2">
-        <div class="card-body">
-            <div class="text-center">
-                <h2 class="card-title"> {{ getFullAnnalName getAnnal._id}} </h2>
-                {{#if isAuthorizedToEditThisAnnal getAnnal}}
-                    <div class="text-center">
-                        <a href="{{ getAnnal._id}}/edit" class="btn btn-primary mb-3"> Modifier</a>
-                    </div>
-                {{/if}}
-                <div class="tex-center">
-                    <a class="btn btn-dark text-white js-goto-create-correction"> Ajouter une correction </a>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-8">
-                    <iframe src="{{splitLink getAnnal.link}}" height="700" width="600" class=""></iframe>
-                </div>
-                <div class="col-4">
-                    {{#each correction in getCorrectionsOfThisAnnal}}
-                        <div class="mb-3">
-                            <a href="{{getAnnal._id}}/corrections/{{correction._id}}"> correction de {{ getFullUserName correction.creatorId}}</a>
-                            <a><i class="fa fa-thumbs-up text-primary"></i> {{getNbLike correction._id}} <i class="fa fa-thumbs-down text-primary"></i> {{getNbDislike correction._id}} </a>
+    {{#if Template.subscriptionsReady}}
+        <div class="card my-2">
+            <div class="card-body">
+                <div class="text-center">
+                    <h2 class="card-title"> {{ getFullAnnalName getAnnal._id}} </h2>
+                    {{#if isAuthorizedToEditThisAnnal getAnnal}}
+                        <div class="text-center">
+                            <a href="{{ getAnnal._id}}/edit" class="btn btn-primary mb-3"> Modifier</a>
                         </div>
-                    {{/each}}
+                    {{/if}}
+                    <a class="float-left btn btn-dark text-white js-goto-annal-list"> <i class="fa fa-chevron-left"></i> retour au sujet </a>
+                    <a class="float-right btn btn-dark text-white js-goto-create-correction"> Ajouter une correction <i class="fa fa-chevron-right"></i> </a>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="card my-2">
+            <div class="card-body">
+               <div class="text-center">
+                    {{>correction_list}}
+                    <iframe src="{{splitLink getAnnal.link}}" height="800" width="900" class="text-center"></iframe>
+                </div>
+            </div>
+        </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="annal_create_form">
@@ -96,12 +92,15 @@
 </template>
 
 <template name="annal_list">
-    {{#each annal in getAnnalsOfThisCourse}}
-        {{>annal_single annal = annal}}
+    {{#if Template.subscriptionsReady}}
+        {{#each annal in getAnnalsOfThisCourse}}
+            {{>annal_single annal = annal}}
+        {{else}}
+            <h3 class="text-muted mt-5 text-center"> Aucune contribution pour ce cours</h3>
+        {{/each}}
     {{else}}
-        <p> Aucune contribution pour ce cours</p>
-    {{/each}}
-
+        {{> spinner}}
+    {{/if}}
 </template>
 
 <template name="annal_single">

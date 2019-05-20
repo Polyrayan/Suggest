@@ -66,3 +66,10 @@ export const correctionUpdateLikeDislikeSchema = new SimpleSchema({
     'dislike.membersId.$':{  type: String },
     correctionId:        {  type: String }
 }, {check });
+
+export const courseUpsertSchema = new SimpleSchema({
+    id :                  {  type: String },
+    section:              {  type: String },
+    project:              {  type: Boolean },
+    semester:              {  type: Number }
+},{ check });

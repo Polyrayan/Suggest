@@ -3,7 +3,6 @@ accounts-password@1.5.1
 alexwine:bootstrap-4@4.1.0
 allow-deny@1.1.0
 audit-argument-checks@1.0.7
-autopublish@1.0.7
 autoupdate@1.6.0
 babel-compiler@7.3.4
 babel-runtime@1.3.0
@@ -35,6 +34,7 @@ email@1.2.3
 es5-shim@4.8.0
 fetch@0.1.1
 fortawesome:fontawesome@4.7.0
+fourseven:scss@4.12.0
 geojson-utils@1.0.10
 hot-code-push@1.0.4
 html-tools@1.0.11
@@ -77,6 +77,7 @@ reactive-var@1.0.11
 reload@1.3.0
 retry@1.1.0
 routepolicy@1.1.0
+sacha:spin@2.3.1
 service-configuration@1.0.11
 session@1.2.0
 sha@1.0.9
@@ -92,6 +93,7 @@ templating@1.3.2
 templating-compiler@1.3.3
 templating-runtime@1.3.2
 templating-tools@1.1.2
+tmeasday:publish-counts@0.8.0
 tracker@1.2.0
 ui@1.0.13
 underscore@1.0.10

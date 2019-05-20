@@ -1,5 +1,15 @@
 import './correction.html';
 
+Template.correction_list.helpers({
+    corrections(){
+        return Corrections.find().fetch();
+    }
+});
+
+Template.correction_create_form.onCreated(function () {
+    this.subscribe('correction.create', FlowRouter.getParam('annalId'));
+});
+
 Template.correction_create_form.events({
     'submit .js-create-correction'(event) {
         event.preventDefault();
@@ -30,6 +40,10 @@ Template.correction_create_form.events({
     }
 });
 
+Template.correction_page.onCreated(function () {
+    this.subscribe('correction.page', FlowRouter.getParam('correctionId'));
+});
+
 Template.correction_page.events({
     'click .js-goto-annal-page'() {
         Meteor.myGlobalFunctions.gotoAnnalPage();
@@ -41,60 +55,69 @@ Template.correction_page.events({
         Meteor.myGlobalFunctions.gotoEditCorrection();
     },
     'click .js-like-correction'(){
-        let membersWhoLiked = Meteor.myGlobalFunctions.getMembersWhoLiked();
-        let membersWhoDisliked = Meteor.myGlobalFunctions.getMembersWhoDisliked();
-        // if user never rated this correction
-        if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()){
-            membersWhoLiked.push(Meteor.userId());
+        if(Meteor.myGlobalFunctions.isConnected()) {
+            let membersWhoLiked = Meteor.myGlobalFunctions.getMembersWhoLiked();
+            let membersWhoDisliked = Meteor.myGlobalFunctions.getMembersWhoDisliked();
+            // if user never rated this correction
+            if (!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
+                membersWhoLiked.push(Meteor.userId());
+            }
+            // if user disliked the correction
+            else if (!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
+                Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(), membersWhoDisliked);
+                membersWhoLiked.push(Meteor.userId());
+            }
+            // if user already liked the correction and click maybe it means that he wants to unlike it
+            else if (Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
+                Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(), membersWhoLiked);
+            }
+            const like = {
+                membersId: membersWhoLiked
+            };
+            const dislike = {
+                membersId: membersWhoDisliked
+            };
+            Meteor.call('updateLikeDislikeCorrection', {
+                like: like,
+                dislike: dislike,
+                correctionId: Meteor.myGlobalFunctions.getCorrection()._id,
+            });
+        } else{
+            Modal.show('login_modal');
         }
-        // if user disliked the correction
-        else if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
-            Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoDisliked);
-            membersWhoLiked.push(Meteor.userId());
-        }
-        // if user already liked the correction and click maybe it means that he wants to unlike it
-        else if(Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
-            Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoLiked);
-        }
-        const like = {
-            membersId : membersWhoLiked
-        };
-        const dislike = {
-            membersId : membersWhoDisliked
-        };
-        Meteor.call('updateLikeDislikeCorrection', {
-            like : like,
-            dislike : dislike,
-            correctionId: Meteor.myGlobalFunctions.getCorrection()._id,
-        });
+
     },
     'click .js-dislike-correction'(){
-        let membersWhoLiked = Meteor.myGlobalFunctions.getMembersWhoLiked();
-        let membersWhoDisliked = Meteor.myGlobalFunctions.getMembersWhoDisliked();
-        // if user never rated this correction
-        if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()){
-            membersWhoDisliked.push(Meteor.userId());
+        if(Meteor.myGlobalFunctions.isConnected()) {
+            let membersWhoLiked = Meteor.myGlobalFunctions.getMembersWhoLiked();
+            let membersWhoDisliked = Meteor.myGlobalFunctions.getMembersWhoDisliked();
+            // if user never rated this correction
+            if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()){
+                membersWhoDisliked.push(Meteor.userId());
+            }
+            // if user liked the correction
+            else if(Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
+                Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoLiked);
+                membersWhoDisliked.push(Meteor.userId());
+            }
+            // if user already disliked the correction and click : maybe it means that he wants to undislike it
+            else if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
+                Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoDisliked);
+            }
+            const like = {
+                membersId : membersWhoLiked
+            };
+            const dislike = {
+                membersId : membersWhoDisliked
+            };
+            Meteor.call('updateLikeDislikeCorrection', {
+                like : like,
+                dislike : dislike,
+                correctionId: Meteor.myGlobalFunctions.getCorrection()._id,
+            });
+        }else{
+            Modal.show('login_modal');
         }
-        // if user liked the correction
-        else if(Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && !Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
-            Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoLiked);
-            membersWhoDisliked.push(Meteor.userId());
-        }
-        // if user already disliked the correction and click : maybe it means that he wants to undislike it
-        else if(!Meteor.myGlobalFunctions.userAlreadyLikedCorrection() && Meteor.myGlobalFunctions.userAlreadyDislikedCorrection()) {
-            Meteor.myGlobalFunctions.deleteElementFromArray(Meteor.userId(),membersWhoDisliked);
-        }
-        const like = {
-            membersId : membersWhoLiked
-        };
-        const dislike = {
-            membersId : membersWhoDisliked
-        };
-        Meteor.call('updateLikeDislikeCorrection', {
-            like : like,
-            dislike : dislike,
-            correctionId: Meteor.myGlobalFunctions.getCorrection()._id,
-        });
     }
 });
 
