@@ -1,4 +1,6 @@
 import './correction.html';
+import {Projects , Tasks , Courses , Annals , Corrections  } from '../both';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.correction_list.helpers({
     corrections(){

@@ -1,5 +1,7 @@
-import './project.html';
-import {Projects } from "../../../both";
+import './project.html'
+
+import {Projects , Tasks , Courses , Annals , Corrections  } from '../both';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import '../globalHelpers';
 var members = [];
 

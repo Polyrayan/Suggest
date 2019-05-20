@@ -1,5 +1,6 @@
 import moment from 'moment';
-import {Annals, Courses} from "../../both";
+import {Projects, Tasks , Annals , Courses , Corrections} from "../../both";
+import {FlowRouter} from "meteor/ostrio:flow-router-extra";
 
 Template.registerHelper('getDisplayDateTime', function (date) {
     return moment(date).format('DD/MM/YYYY');
