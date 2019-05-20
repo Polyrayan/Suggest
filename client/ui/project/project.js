@@ -200,7 +200,8 @@ Template.project_edit_form.events({
         });
     },
     'click .js-delete-project'(){
-        Meteor.call('removeProject', FlowRouter.getParam('projectId'), function (error , result) {
+        const projectId = FlowRouter.getParam('projectId');
+        Meteor.call('removeProject', projectId, function (error , result) {
             if(!error){
                 FlowRouter.go('/');
             }

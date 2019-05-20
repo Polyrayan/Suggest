@@ -2,11 +2,11 @@
     <div class="card-body">
         <form class="js-create-task">
             <label for="taskName"> Ajouter une tâche :</label>
-            <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName">
+            <input type="text" class="form-control mb-2" placeholder="Nom de la tâche" name="content" id="taskName" required>
             <label for="difficulty"> Difficulté de la tâche : <i title="La difficulté joue un role important dans la répartition automatisée des tâches,
 Suggest vous conseille donc d'estimer la difficulté en fonction de la durée et les notions qu'il faut maîtriser
 pour réaliser cette tâche comparée aux autres tâches du projet"> <i class="fa fa-question-circle text-primary"></i> </i> </label>
-            <select name="difficulty" class="form-control mb-2" id="difficulty">
+            <select name="difficulty" class="form-control mb-2" id="difficulty" required>
                 <option  value="1" >Facile</option>
                 <option  value="2" >Normale</option>
                 <option  value="3" >Difficile</option>

@@ -122,10 +122,10 @@
         <div class="card-body mb-2">
             <a href="{{course.section}}/{{course._id}}/annals"><h5> {{course._id}} </h5></a>
             {{#if course.project}}
-                <a href="" class="js-goto-filter-project" title="projets" id="{{course._id}}">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
+                <a href="" class="js-goto-filter-project text-dark" title="projets" id="{{course._id}}">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
             {{/if}}
-            <a href="{{course.section}}/{{course._id}}/annals" title="sujets" > {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
-            <a href="" title="correction">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
+            <a href="{{course.section}}/{{course._id}}/annals" title="sujets" class="text-muted" > {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
+            <a href="" title="correction" class="text-success">{{nbCorrections course._id}}  <i class="fa fa-file"></i> </a>
         </div>
     </div>
 </template>

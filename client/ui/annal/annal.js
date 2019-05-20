@@ -58,7 +58,8 @@ Template.annal_edit_form.events({
             });
     },
     'click .js-delete-annal'() {
-        Meteor.call('removeAnnal', FlowRouter.getParam('annalId'), function (error) {
+        const annalId = FlowRouter.getParam('annalId');
+        Meteor.call('removeAnnal', annalId, function (error) {
             if (!error) {
                 FlowRouter.go("/courses/:section/:courseId/annals/", {
                     section: FlowRouter.getParam('section'),

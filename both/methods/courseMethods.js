@@ -1,6 +1,6 @@
 import './functionMethods';
 
-import {courseUpsertSchema, Courses } from '../collections';
+import {courseUpsertSchema, Courses, Annals , Projects , Corrections} from '../collections';
 import {check} from 'meteor/check';
 
 Meteor.methods({
@@ -34,6 +34,19 @@ Meteor.methods({
         check(courseId, String);
         Meteor.myMethodFunctions.isConnected();
         Meteor.myMethodFunctions.isAdmin();
+        //remove all annals of this course
+        const annalsFound = Annals.find({course : courseId}).fetch();
+        const arrayAnnal = annalsFound.map(annal => annal._id);
+        for (let i = 0; i < arrayAnnal.length ; i++){
+            Meteor.call('removeAnnal', arrayAnnal[i]);
+        }
+        //remove all projects of this course
+        const projectsFound = Projects.find({course : courseId}).fetch();
+        const arrayProject = projectsFound.map(project => project._id);
+        for (let i = 0; i < arrayProject.length ; i++){
+            Meteor.call('removeProject', arrayProject[i]);
+        }
+        //remove course
         Courses.remove({_id : courseId});
     }
 });

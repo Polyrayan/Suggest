@@ -154,12 +154,21 @@ Meteor.publish('course.edit', function (courseId) {
 
 Meteor.publish('home.page', function () {
     let user = Meteor.userId();
-    let userFound = Meteor.users.find({_id : user});
-    let projectFound = Projects.find({ members: { $all: [user] }});
+    if(user){
+        let userFound = Meteor.users.find({_id : user});
+        let projectFound = Projects.find({ members: { $all: [user] }});
+        return [
+            userFound,
+            projectFound
+        ]
+    }else{
+        return [
+            Projects.find({},{fields : {section : 1}}),
+            Courses.find({}, {fields : {section : 1}}),
+            Annals.find({},{fields : {course : 1}}),
+            Corrections.find({},{fields : {annalId : 1}})
+        ]
+    }
 
-    return [
-        userFound,
-        projectFound
-    ]
 
 });

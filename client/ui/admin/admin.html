@@ -71,16 +71,20 @@
                 <div class="card-title">
                     <a href="{{course.section}}/{{course._id}}/annals"> <h5>{{course._id}}</h5> </a>
                 </div>
-                <div class="card-content">
+                <div class="card-body">
+                    <a href="" class="text-white">info</a>
                     {{#if course.project}}
                         <a href="/projects" class="js-goto-project-course text-dark" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
                     {{/if}}
                     <a href="/courses/{{course.section}}/{{course._id}}/annals" title="sujets" class="text-muted"> {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
-                    <a href="" title="correction">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
-                    <div class="btn-group">
-                        <button class="btn btn-sm btn-warning js-edit-course" name="editCourse" value="{{course._id}}"> éditer </button>
-                        <button class="btn btn-sm btn-danger js-delete-course" name="deleteCourse" value="{{course._id}}"> supprimer </button>
+                    <a href="" title="correction" class="text-success">{{nbCorrections course._id}} <i class="fa fa-file"></i> </a>
+                    <div class="card-body">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-warning js-edit-course" name="editCourse" value="{{course._id}}"> éditer </button>
+                            <button class="btn btn-sm btn-danger js-delete-course" name="deleteCourse" value="{{course._id}}"> supprimer </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

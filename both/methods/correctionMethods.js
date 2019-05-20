@@ -38,7 +38,7 @@ Meteor.methods({
     {
         check(correctionId, String);
         Meteor.myMethodFunctions.isConnected();
-        Meteor.myMethodFunctions.isAuthorizedToEditCorrection(correctionId);
+        Meteor.myMethodFunctions.isAuthorizedToDeleteCorrection(correctionId);
         Corrections.remove({_id : correctionId});
     }
 });

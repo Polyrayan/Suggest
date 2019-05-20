@@ -68,7 +68,7 @@ Template.admin_course_single.events({
         event.preventDefault();
         const courseId = $(event.currentTarget).val();
         if (Meteor.user().profile.admin){
-            Meteor.call('removeCourse', courseId, function (error , result) {
+            Meteor.call('removeCourse', courseId, function (error) {
                 if(!error){
                     FlowRouter.go('/admin/sections/:section/courses/',{section : FlowRouter.getParam('section')});
                 }

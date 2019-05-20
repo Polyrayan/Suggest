@@ -11,7 +11,7 @@ Meteor.myMethodFunctions = {
     },
     isAuthorizedToDeleteProject : function (projectId) {
         let projectFound = Projects.findOne({_id: projectId});
-        if(!projectFound.ownerId !== Meteor.userId()){
+        if(!projectFound.ownerId === Meteor.userId() && !Meteor.myGlobalFunctions.isAdmin()){
             throw new Meteor.Error('User-not-authorized',"user must be the owner of the project to do this");
         }
     },
@@ -24,6 +24,13 @@ Meteor.myMethodFunctions = {
     isAuthorizedToEditCorrection : function(correctionId){
         let correctionFound = Corrections.findOne({_id: correctionId});
         if(!correctionFound.creatorId === Meteor.userId() && !Meteor.myGlobalFunctions.isAdmin()){
+            throw new Meteor.Error('User-not-authorized',"user must be an admin or at least the owner of the annal");
+        }
+    },
+    isAuthorizedToDeleteCorrection : function(correctionId){
+        let correctionFound = Corrections.findOne({_id: correctionId});
+        let annalFound = Annals.findOne({_id : correctionFound.annalId});
+        if(!correctionFound.creatorId === Meteor.userId() &&!annalFound.creatorId && !Meteor.myGlobalFunctions.isAdmin()){
             throw new Meteor.Error('User-not-authorized',"user must be an admin or at least the owner of the annal");
         }
     },

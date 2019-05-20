@@ -1,6 +1,6 @@
 import './functionMethods';
 
-import {Annals, annalUpsertSchema} from '../collections';
+import {Annals, annalUpsertSchema, Corrections} from '../collections';
 import {check} from "meteor/check";
 
 Meteor.methods({
@@ -32,6 +32,12 @@ Meteor.methods({
         check(annalId, String);
         Meteor.myMethodFunctions.isConnected();
         Meteor.myMethodFunctions.isAuthorizedToEditAnnal(annalId);
+
+        const correctionsFound = Corrections.find({annalId : annalId}).fetch();
+        const ArrayCorrections = correctionsFound.map(correction => correction._id);
+        for (let i = 0; i < ArrayCorrections.length ; i++) {
+            Meteor.call('removeCorrection', ArrayCorrections[i]);
+        }
         Annals.remove({_id : annalId});
     }
 });
