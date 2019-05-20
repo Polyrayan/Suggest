@@ -18,10 +18,6 @@
     "simpl-schema": "^1.5.5"
   },
   "meteor": {
-    "mainModule": {
-      "client": "client/main.js",
-      "server": "server/main.js"
-    },
     "testModule": "tests/main.js"
   }
 }
