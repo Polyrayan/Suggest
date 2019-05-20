@@ -218,5 +218,24 @@ Meteor.myGlobalFunctions = {
 
         return nbAnnals.length + ' sujets ' + nbCorrections.length + ' corrections et ' + nbProjects.length + ' projets en '+section;
 
+    },
+    isGoodLink(correction) {
+        const link = correction && correction.link;
+        if (link) {
+            return (link.includes('/open?id=') || link.includes('file/d') || link.includes('/view') && link.includes('https://drive.google.com'));
+        } else {
+            return false
+        }
+    },
+    splitLink(link){
+        if(link.includes('/view')){
+            return link.replace("view", "preview");
+        }else if(link.includes('/open?id=')){
+            const la = link.replace('open?id=','file/d/');
+            const newLink = la.concat("/preview");
+            return newLink;
+        }else{
+            return "";
+        }
     }
 };

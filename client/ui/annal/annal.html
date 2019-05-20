@@ -18,7 +18,12 @@
             <div class="card-body">
                <div class="text-center">
                     {{>correction_list}}
+                    {{#if isGoodLink getAnnal}}
                     <iframe src="{{splitLink getAnnal.link}}" height="800" width="900" class="text-center"></iframe>
+                    {{else}}
+                        <h5 class="text-danger my-5"> Le lien renseigné n'est ni un shareable link ni l'url d'un pdf dans un drive</h5>
+                        <p class="text-muted"> clique droit sur le pdf a partagé + get shareable link </p>
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -109,11 +114,12 @@
 </template>
 
 <template name="annal_single">
+    {{#if Template.subscriptionsReady}}
     <div class="card">
         <div class="card-header ">
             <div class="row">
                 <div class="col-6">
-                    <a href="annals/{{annal._id}}"><h6> {{getFullAnnalName annal._id}}</h6></a>
+                    <a href="annals/{{annal._id}}"><h6> {{getFullAnnalName annal._id}}</h6> {{nbCorrection annal._id}} <i class="fa fa-file-pdf-o text-success mr-2"></i></a>
                 </div>
                 <div class="col-6">
                     <h6 class="text-right "> Ajouter par {{getFullUserName annal.creatorId}}</h6>
@@ -127,4 +133,7 @@
                 </div>
         </div>
     </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
 </template>

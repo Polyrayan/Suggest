@@ -65,8 +65,12 @@ Template.registerHelper('getNbCompletedTasksOfThisProject', function (projectId)
     return Meteor.myGlobalFunctions.getNbCompletedTasksOfThisProject(projectId);
 });
 
+Template.registerHelper('isGoodLink', function (correction) {
+    return Meteor.myGlobalFunctions.isGoodLink(correction);
+});
+
 Template.registerHelper('splitLink', function (link) {
-    return link.replace("view", "preview")
+    return Meteor.myGlobalFunctions.splitLink(link);
 });
 
 Template.registerHelper('getAnnal',function () {

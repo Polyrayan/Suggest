@@ -47,6 +47,17 @@ Template.correction_page.onCreated(function () {
     this.subscribe('correction.page', FlowRouter.getParam('correctionId'));
 });
 
+Template.correction_page.helpers({
+    goodLink(correction) {
+        const link = correction && correction.link;
+        if(link){
+            return(link.includes('/open?id=') || link.includes('file/d') || link.includes('/view') && link.includes('https://drive.google.com'));
+        }else{
+            return false
+        }
+    }
+});
+
 Template.correction_page.events({
     'click .js-goto-annal-page'() {
         Meteor.myGlobalFunctions.gotoAnnalPage();

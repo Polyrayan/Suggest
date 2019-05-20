@@ -23,7 +23,6 @@ Template.navbar.events({
         }
     },
     'click .js-goto-my-courses'() {
-        console.log("ok");
         if (Meteor.myGlobalFunctions.isConnected()){
             FlowRouter.go('/courses/'+Meteor.myGlobalFunctions.getUser().profile.section);
         }else{

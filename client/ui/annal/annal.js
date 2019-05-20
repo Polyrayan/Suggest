@@ -73,13 +73,19 @@ Template.annal_edit_form.events({
     }
 });
 
-Template.annal_page.onCreated(function () {
+Template.annal_page.onCreated(function (){
     this.subscribe('annal.page', FlowRouter.getParam('annalId'));
 });
 
 Template.annal_page.events({
     'click .js-goto-create-correction'() {
         Meteor.myGlobalFunctions.gotoCreateCorrection();
+    }
+});
+
+Template.annal_single.helpers({
+    nbCorrection(annalId){
+        return Corrections.find({annalId: annalId}).fetch().length;
     }
 });
 

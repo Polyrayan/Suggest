@@ -19,9 +19,7 @@ Template.home.helpers({
         const nbAnnals = Annals.find({course : {$in : arrayCourseId} }).fetch();
         let arrayAnnalId = nbAnnals.map(annals => annals._id);
         const nbCorrections = Annals.find({course : {$in : arrayAnnalId} }).fetch();
-        console.log(nbCourses);
-        console.log(nbAnnals);
-        console.log(nbAnnals.length+' sujets '+nbCorrections.length+' corrections et '+nbProjects.length+' projets en IG3');
+
         return nbAnnals.length+' sujets '+nbCorrections.length+' corrections et '+nbProjects.length+' projets en IG3';
     }
 });

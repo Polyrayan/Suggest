@@ -78,12 +78,13 @@ Meteor.publish('annals.list', function (course) {
     check(course, String );
     // get cursors
     let annalCursor = Annals.find({course : course});
-
     let arrayAnnal = annalCursor.fetch();
     let arrayUsersId = arrayAnnal.map(annal => annal.creatorId);
-
+    let arrayAnnalId = arrayAnnal.map(annal => annal._id);
+    let correctionCursor = Corrections.find({annalId : {$in : arrayAnnalId}});
     return[
         annalCursor,
+        correctionCursor,
         Meteor.users.find({_id : {$in : arrayUsersId} }, {fields: {profile: 1}})
     ]
 });

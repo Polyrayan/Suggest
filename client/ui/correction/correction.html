@@ -21,7 +21,11 @@
             <a href="" class="js-dislike-correction "> <i class="fa fa-thumbs-down text-danger"></i> {{getNbDislike getCorrection._id}} </a>
         </div>
         <div class="card-body text-center">
+            {{#if isGoodLink getCorrection}}
             <iframe src="{{splitLink getCorrection.link}}" height="700" width="900" class=""></iframe>
+            {{else}}
+                <h5 class="text-danger my-5"> Le lien renseigné n'est ni un sharedlink ni l'url du pdf</h5>
+            {{/if}}
         </div>
     </div>
     {{else}}
