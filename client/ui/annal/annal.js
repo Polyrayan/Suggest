@@ -1,6 +1,6 @@
 import './annal.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import {Annals, Courses , Projects , Corrections , Tasks } from "../../../both";
 Template.annal_list.onCreated(function () {
     this.subscribe('annals.list', FlowRouter.getParam('courseId'));
 });

@@ -1,6 +1,5 @@
 import './task.html';
-
-import {Tasks , Projects } from "../../../both";
+import {Annals, Courses , Projects , Corrections , Tasks } from "../../../both";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.task_create_form.events({
