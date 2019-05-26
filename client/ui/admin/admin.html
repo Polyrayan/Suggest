@@ -1,25 +1,25 @@
 <template name="admin_page">
     {{#if Template.subscriptionsReady}}
         {{#if admin}}
-            <h5 class="mb-5"> Gestion des cours :</h5>
+            <h5 class="my-4"> Gestion des cours :</h5>
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="card bg-primary js-goto-admin-ig3">
-                        <div class="card-body">
-                            <a href="" class=" text-white"><h4 class="text-center"> IG3</h4></a>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="card js-goto-admin-ig3 mb-2 bg-custom-1">
+                        <div class="btn card-body">
+                            <a href="" class="text-white"><h4 class="text-center"> IG3</h4></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card bg-primary js-goto-admin-ig4">
-                        <div class="card-body ">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="card js-goto-admin-ig4 mb-2 bg-custom-1">
+                        <div class="btn card-body ">
                             <a href="" class="text-white"><h4 class="text-center"> IG4</h4></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card bg-primary js-goto-admin-ig5">
-                        <div class="card-body">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="card bg-custom-1 js-goto-admin-ig5">
+                        <div class="btn card-body">
                             <a href="" class=" text-white"><h4 class="text-center"> IG5</h4></a>
                         </div>
                     </div>
@@ -40,21 +40,21 @@
         <h3> Semestre 1 </h3>
         <div class="row mb-2">
             {{#each course in coursesS1}}
-                <div class="col-lg-2 mb-2">
+                <div class="col-lg-3 col-md-5 col-sm-6 mb-2 justify-content-center">
                     {{> admin_course_single course = course}}
                 </div>
             {{else}}
-                <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
+                <h6 class="mx-auto text-muted"> Aucune matière à afficher </h6>
             {{/each}}
         </div>
         <h3> Semestre 2 </h3>
         <div class="row mb-2">
             {{#each course in coursesS2}}
-                <div class="col-lg-2 mb-2">
+                <div class="col-lg-3 col-md-5 mb-2 justify-content-center">
                     {{> admin_course_single  course = course}}
                 </div>
             {{else}}
-                <h4 class="text-center text-muted"> Aucune matière à afficher </h4>
+                <h6 class="mx-auto text-muted"> Aucune matière à afficher </h6>
             {{/each}}
         </div>
         {{else}}
@@ -68,11 +68,10 @@
 <template name="admin_course_single">
         <div class="card">
             <div class="card-body">
-                <div class="card-title">
-                    <a href="{{course.section}}/{{course._id}}/annals"> <h5>{{course._id}}</h5></a>
+                <div class="card-text text-center" >
+                    <a  href="/courses/{{course.section}}/{{course._id}}/annals"> <h5>{{course._id}}</h5></a>
                 </div>
-                <div class="card-body">
-                    <a href="" class="text-white">info</a>
+                <div class="card-text text-center">
                     {{#if course.project}}
                         <a href="/projects" class="js-goto-project-course text-dark" title="projets">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
                     {{/if}}
@@ -84,7 +83,6 @@
                             <button class="btn btn-sm btn-danger js-delete-course" name="deleteCourse" value="{{course._id}}"> supprimer </button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

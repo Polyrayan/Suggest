@@ -1,10 +1,10 @@
 <template name="course_page">
     <div class="text-muted card-header mt-2">
         <div class="row">
-            <div class="col-6">
+            <div class="col-lg-6 col-md-5 col-sm-5 col-6">
                 <h5> Les annales répertoriées : </h5>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-md-7 col-sm-7 col-6">
                 <h5 class="text-right"> {{nbAnnals}} annales </h5>
                 <a class="float-right btn btn-success js-goto-create-annal text-white"> Ajouter un sujet </a>
             </div>
@@ -21,7 +21,7 @@
                 <form class="js-create-course">
                     <input type="text" class="form-control mb-2" placeholder="Nom du cours" name="name" required>
                     <select name="semester" class="form-control mb-2" required>
-                        <option value=""> Semestre </option>
+                        <option value="">Semestre </option>
                         <option value="1" >Semestre 1</option>
                         <option value="2" >Semestre 2</option>
                     </select>
@@ -120,12 +120,14 @@
 <template name="course_single">
     <div class="card">
         <div class="card-body mb-2">
-            <a href="{{course.section}}/{{course._id}}/annals"><h5> {{course._id}} </h5></a>
-            {{#if course.project}}
-                <a href="" class="js-goto-filter-project text-dark" title="projets" id="{{course._id}}">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
-            {{/if}}
-            <a href="{{course.section}}/{{course._id}}/annals" title="sujets" class="text-muted" > {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
-            <a href="" title="correction" class="text-success">{{nbCorrections course._id}}  <i class="fa fa-file"></i> </a>
+            <div class="card-text text-center">
+                <a href="{{course.section}}/{{course._id}}/annals"><h5> {{course._id}} </h5></a>
+                {{#if course.project}}
+                    <a href="" class="js-goto-filter-project text-dark" title="projets" id="{{course._id}}">{{nbProject course._id}}<i class="fa fa-briefcase mr-2"></i> </a>
+                {{/if}}
+                <a href="{{course.section}}/{{course._id}}/annals" title="sujets" class="text-muted" > {{nbAnnal course._id}}<i class="fa fa-file-pdf-o mr-2"> </i> </a>
+                <a href="" title="correction" class="text-success">{{nbCorrections course._id}}  <i class="fa fa-file"></i> </a>
+            </div>
         </div>
     </div>
 </template>

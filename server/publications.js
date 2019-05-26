@@ -55,7 +55,7 @@ Meteor.publish('project.create', function () {
 Meteor.publish('courses.list', function (section) {
     check(section, String );
     // get cursors
-    let courseCursor = Courses.find({section: section});
+    let courseCursor = Courses.find({section: section},{sort: { _id : 1}});
     let arrayCourse = courseCursor.fetch();
     let arrayCourseId = arrayCourse.map(course => course._id);
 
@@ -77,7 +77,7 @@ Meteor.publish('courses.list', function (section) {
 Meteor.publish('annals.list', function (course) {
     check(course, String );
     // get cursors
-    let annalCursor = Annals.find({course : course});
+    let annalCursor = Annals.find({course : course}, {sort:{year : -1}});
     let arrayAnnal = annalCursor.fetch();
     let arrayUsersId = arrayAnnal.map(annal => annal.creatorId);
     let arrayAnnalId = arrayAnnal.map(annal => annal._id);

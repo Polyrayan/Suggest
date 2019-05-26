@@ -9,7 +9,11 @@
                         <a class="btn btn-primary mb-3 js-goto-edit-correction text-white"> Modifier</a>
                     </div>
                 {{/if}}
-                <div>
+                <div class="d-sm-none">
+                    <a class="float-left btn btn-dark text-white js-goto-annal-page"> <i class="fa fa-chevron-left"></i> Sujet </a>
+                    <a class="float-right btn btn-dark text-white js-goto-create-correction"> Correction <i class="fa fa-chevron-right"></i> </a>
+                </div>
+                <div class="d-none d-sm-inline">
                     <a class="float-left btn btn-dark text-white js-goto-annal-page"> <i class="fa fa-chevron-left"></i> retour au sujet </a>
                     <a class="float-right btn btn-dark text-white js-goto-create-correction"> Ajouter une autre correction <i class="fa fa-chevron-right"></i> </a>
                 </div>
@@ -22,7 +26,9 @@
         </div>
         <div class="card-body text-center">
             {{#if isGoodLink getCorrection}}
-            <iframe src="{{splitLink getCorrection.link}}" height="700" width="900" class=""></iframe>
+            <div class="row justify-content-center">
+                <iframe src="{{splitLink getCorrection.link}}" height="800" width="900" class="col-lg-8 col-md-10 col-sm-12 text-center"></iframe>
+            </div>
             {{else}}
                 <h5 class="text-danger my-5"> Le lien renseigné n'est ni un sharedlink ni l'url du pdf</h5>
             {{/if}}
