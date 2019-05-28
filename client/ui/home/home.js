@@ -10,16 +10,3 @@ Template.home.helpers({
         return Projects.find();
     },
 });
-
-Template.home.helpers({
-    sumUpIG3(){
-        const nbProjects = Projects.find({section :"IG3"}).fetch();
-        const nbCourses = Courses.find({section :"IG3"}).fetch();
-        let arrayCourseId = nbCourses.map(course => course._id);
-        const nbAnnals = Annals.find({course : {$in : arrayCourseId} }).fetch();
-        let arrayAnnalId = nbAnnals.map(annals => annals._id);
-        const nbCorrections = Annals.find({course : {$in : arrayAnnalId} }).fetch();
-
-        return nbAnnals.length+' sujets '+nbCorrections.length+' corrections et '+nbProjects.length+' projets en IG3';
-    }
-});

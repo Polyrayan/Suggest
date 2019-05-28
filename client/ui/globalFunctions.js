@@ -214,7 +214,7 @@ Meteor.myGlobalFunctions = {
         const arrayCourseId = nbCourses.map(course => course._id);
         const nbAnnals = Annals.find({course: {$in: arrayCourseId}}).fetch();
         const arrayAnnalId = nbAnnals.map(annals => annals._id);
-        const nbCorrections = Annals.find({course: {$in: arrayAnnalId}}).fetch();
+        const nbCorrections = Corrections.find({annalId: {$in: arrayAnnalId}}).fetch();
 
         return nbAnnals.length + ' sujets ' + nbCorrections.length + ' corrections et ' + nbProjects.length + ' projets en '+section;
 
