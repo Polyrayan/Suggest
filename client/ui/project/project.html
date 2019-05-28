@@ -20,10 +20,9 @@
             {{>task_create_form}}
         </div>
     {{/if}}
-        <div class="row text-center">
-            <div class="offset-lg-1"></div>
+        <div class="row text-center justify-content-center">
             {{#each member in project.members}}
-                <div class="col-lg-{{idealSizeGrid project.members.length}} col-sm-12 mb-5">
+                <div class="col-lg-{{idealSizeGrid project.members.length}} col-md-{{idealSizeGrid project.members.length}} col-sm-6 mb-5">
                     <div class="card-header">
                         <h5 class="card-title"> {{getFullUserName member}} </h5>
                     </div>

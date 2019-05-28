@@ -137,7 +137,7 @@ Meteor.publish('admin.page', function () {
 
 Meteor.publish('admin.course.list', function (section) {
     check(section, String);
-    let courseCursor = Courses.find({section : section});
+    let courseCursor = Courses.find({section : section},{sort: { _id : 1}});
     return [
         courseCursor
     ]

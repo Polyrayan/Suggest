@@ -135,6 +135,10 @@ Template.correction_page.events({
     }
 });
 
+Template.correction_edit_form.onCreated(function () {
+    this.subscribe('correction.page', FlowRouter.getParam('correctionId'));
+});
+
 Template.correction_edit_form.events({
     'submit .js-edit-correction'(event){
         event.preventDefault();
